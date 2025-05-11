@@ -1,0 +1,157 @@
+.camp-list-section {
+    padding: 4rem 2rem;
+    background-color: #f8f9fa;
+}
+
+.camp-list-section h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+}
+
+.camp-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.camp-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.camp-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.camp-header {
+    padding: 1.5rem;
+    background-color: #1a1a1a;
+    color: white;
+    position: relative;
+}
+
+.camp-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #61dafb;
+}
+
+.camp-type {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+.camp-type.residential {
+    background-color: #61dafb;
+    color: #1a1a1a;
+}
+
+.camp-type.walk-in {
+    background-color: #28a745;
+    color: white;
+}
+
+.camp-details {
+    padding: 1.5rem;
+}
+
+.camp-description {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.camp-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-item .label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.info-item .value {
+    font-weight: 600;
+    color: #333;
+}
+
+.camp-dates {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.camp-dates h4 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.camp-dates ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.camp-dates li {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.register-button {
+    display: block;
+    background-color: #61dafb;
+    color: #1a1a1a;
+    text-decoration: none;
+    text-align: center;
+    padding: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #4fa8c7;
+}
+
+@media (max-width: 768px) {
+    .camp-list-section {
+        padding: 2rem 1rem;
+    }
+
+    .camp-list-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .camp-info {
+        grid-template-columns: 1fr;
+    }
+
+    .camp-header h3 {
+        font-size: 1.3rem;
+        padding-right: 80px;
+    }
+}

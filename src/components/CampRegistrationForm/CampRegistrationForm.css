@@ -1,0 +1,84 @@
+.camp-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.camp-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.camp-form label {
+    color: white;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.camp-form input,
+.camp-form select,
+.camp-form textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.camp-form input:focus,
+.camp-form select:focus,
+.camp-form textarea:focus {
+    outline: none;
+    border-color: #61dafb;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.camp-form input::placeholder,
+.camp-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.camp-form .submit-button {
+    grid-column: 1 / -1;
+    background-color: #61dafb;
+    color: #282c34;
+    padding: 1.2rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+}
+
+.camp-form .submit-button:hover {
+    background-color: #4fa8c7;
+    transform: translateY(-2px);
+}
+
+.camp-form .submit-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .camp-form {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .camp-form .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .camp-form input,
+    .camp-form select,
+    .camp-form textarea {
+        padding: 0.8rem;
+    }
+}

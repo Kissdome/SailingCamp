@@ -1,0 +1,64 @@
+.about-page {
+    background-image: url("https://images.unsplash.com/photo-1540946485063-a40da27545f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80");
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 2rem auto;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.about-section {
+    text-align: left;
+    padding: 1rem;
+}
+
+.about-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .content-overlay {
+        width: 95%;
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    .about-section h1 {
+        font-size: 2rem;
+    }
+
+    .about-section p {
+        font-size: 1rem;
+    }
+
+    .about-content {
+        gap: 1.5rem;
+    }
+}

@@ -1,0 +1,71 @@
+
+> server@1.0.0 start
+> node server.js
+
+Server is running on port 5001
+Connected to MongoDB
+MongoDB URI: mongodb://127.0.0.1:27017/sailing-camps
+Received application data: {
+  name: 'testDoem',
+  email: 'test@test.com',
+  age: 22,
+  experience: 'beginner',
+  campType: 'weekend',
+  startDate: '2025-05-23T00:00:00.000Z',
+  additionalInfo: '2213'
+}
+Successfully saved applicant: {
+  name: 'testDoem',
+  email: 'test@test.com',
+  age: 22,
+  experience: 'beginner',
+  campType: 'weekend',
+  startDate: 2025-05-23T00:00:00.000Z,
+  additionalInfo: '2213',
+  _id: new ObjectId('68208864f4611157c3cbebe7'),
+  registrationDate: 2025-05-11T11:22:12.296Z,
+  __v: 0
+}
+Received application data: {
+  name: 'testSecond',
+  email: 'testtttt@test.com',
+  age: 22,
+  experience: 'beginner',
+  campType: 'weekend',
+  startDate: '2025-05-22T00:00:00.000Z',
+  additionalInfo: ''
+}
+Successfully saved applicant: {
+  name: 'testSecond',
+  email: 'testtttt@test.com',
+  age: 22,
+  experience: 'beginner',
+  campType: 'weekend',
+  startDate: 2025-05-22T00:00:00.000Z,
+  additionalInfo: '',
+  _id: new ObjectId('6820888bf4611157c3cbebe9'),
+  registrationDate: 2025-05-11T11:22:51.889Z,
+  __v: 0
+}
+Login attempt received: { username: 'admin', password: 'admin123' }
+Request headers: {
+  host: 'localhost:5000',
+  connection: 'keep-alive',
+  'content-length': '42',
+  'sec-ch-ua-platform': '"macOS"',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'content-type': 'application/json',
+  'sec-ch-ua-mobile': '?0',
+  accept: '*/*',
+  origin: 'http://localhost:3000',
+  'sec-fetch-site': 'same-site',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-dest': 'empty',
+  referer: 'http://localhost:3000/',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'hu-HU,hu;q=0.9,en-US;q=0.8,en;q=0.7'
+}
+Looking up admin user...
+Admin lookup result: Found
+Login successful, token generated

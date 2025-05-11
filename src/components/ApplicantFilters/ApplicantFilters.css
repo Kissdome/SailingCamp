@@ -1,0 +1,73 @@
+.filters-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    color: #333;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    color: #333;
+    width: 100%;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    outline: none;
+    border-color: #61dafb;
+    box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.25);
+}
+
+.clear-filters-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    align-self: end;
+}
+
+.clear-filters-button:hover {
+    background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .filters-section {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        padding: 0.6rem;
+    }
+
+    .clear-filters-button {
+        width: 100%;
+    }
+}
