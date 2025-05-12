@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../../config";
+import CampForm from "./CampForm";
 import "./CampManagement.css";
 
 const CampManagement = () => {
@@ -242,110 +243,17 @@ const CampManagement = () => {
                                 &times;
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="camp-form">
-                            <div className="form-group">
-                                <label htmlFor="name">Camp Name</label>
-                                <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="type">Camp Type</label>
-                                <select id="type" name="type" value={formData.type} onChange={handleInputChange} required>
-                                    <option value="residential">Residential</option>
-                                    <option value="day">Day Camp</option>
-                                    <option value="weekend">Weekend Camp</option>
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="duration">Duration</label>
-                                <input
-                                    type="text"
-                                    id="duration"
-                                    name="duration"
-                                    value={formData.duration}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g., 1 week, 2 weeks"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="price">Price</label>
-                                <input type="text" id="price" name="price" value={formData.price} onChange={handleInputChange} placeholder="e.g., $599" required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="description">Description</label>
-                                <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} required />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Start Dates</label>
-                                {formData.startDates.map((date, index) => (
-                                    <div key={index} className="start-date-input">
-                                        <input type="date" value={date} onChange={(e) => handleStartDateChange(index, e.target.value)} required />
-                                        {index > 0 && (
-                                            <button type="button" onClick={() => removeStartDateField(index)} className="remove-date-button">
-                                                Remove
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                                <button type="button" onClick={addStartDateField} className="add-date-button">
-                                    Add Another Date
-                                </button>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="ageRange">Age Range</label>
-                                <input type="text" id="ageRange" name="ageRange" value={formData.ageRange} onChange={handleInputChange} placeholder="e.g., 8-12 years" required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="experience">Experience Level</label>
-                                <select id="experience" name="experience" value={formData.experience} onChange={handleInputChange} required>
-                                    <option value="beginner">Beginner</option>
-                                    <option value="intermediate">Intermediate</option>
-                                    <option value="advanced">Advanced</option>
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="maxCapacity">Maximum Capacity</label>
-                                <input type="number" id="maxCapacity" name="maxCapacity" value={formData.maxCapacity} onChange={handleInputChange} min="1" required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="instructorCount">Number of Instructors</label>
-                                <input type="number" id="instructorCount" name="instructorCount" value={formData.instructorCount} onChange={handleInputChange} min="1" required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="location">Location</label>
-                                <input type="text" id="location" name="location" value={formData.location} onChange={handleInputChange} required />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="requirements">Requirements</label>
-                                <textarea
-                                    id="requirements"
-                                    name="requirements"
-                                    value={formData.requirements}
-                                    onChange={handleInputChange}
-                                    placeholder="List any prerequisites or requirements for the camp"
-                                />
-                            </div>
-
-                            <div className="form-actions">
-                                <button type="submit" className="submit-button">
-                                    {editingCamp ? "Update Camp" : "Create Camp"}
-                                </button>
-                                <button type="button" onClick={closeModal} className="cancel-button">
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
+                        <CampForm
+                            formData={formData}
+                            handleInputChange={handleInputChange}
+                            handleStartDateChange={handleStartDateChange}
+                            addStartDateField={addStartDateField}
+                            removeStartDateField={removeStartDateField}
+                            handleSubmit={handleSubmit}
+                            closeModal={closeModal}
+                            editingCamp={editingCamp}
+                            error={error}
+                        />
                     </div>
                 </div>
             )}
