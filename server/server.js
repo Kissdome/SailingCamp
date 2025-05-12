@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const Applicant = require("./models/Applicant");
+const Camp = require("./models/Camp");
 const jwt = require("jsonwebtoken");
 const XLSX = require("xlsx");
 const multer = require("multer");
@@ -27,6 +28,19 @@ app.use(
 
 // Middleware
 app.use(express.json());
+
+// Public GET /api/camps route - must be before any other routes
+app.get("/api/camps", async (req, res) => {
+    console.log("GET /api/camps request received");
+    try {
+        const camps = await Camp.find().sort({ createdAt: -1 });
+        console.log("Camps found:", camps.length);
+        res.json(camps);
+    } catch (error) {
+        console.error("Error fetching camps:", error);
+        res.status(500).json({ message: "Error fetching camps" });
+    }
+});
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, "uploads");
@@ -84,6 +98,17 @@ const adminSchema = new mongoose.Schema({
 
 const Admin = mongoose.model("Admin", adminSchema);
 
+// Public routes - defined before any authentication middleware
+app.get("/api/photos", async (req, res) => {
+    try {
+        const photos = await Photo.find().sort({ uploadDate: -1 });
+        res.json(photos);
+    } catch (error) {
+        console.error("Error fetching photos:", error);
+        res.status(500).json({ message: "Error fetching photos" });
+    }
+});
+
 // Middleware to verify JWT token
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
@@ -101,6 +126,57 @@ const authenticateToken = (req, res, next) => {
         next();
     });
 };
+
+// Protected routes
+app.post("/api/camps", authenticateToken, async (req, res) => {
+    try {
+        const camp = new Camp(req.body);
+        const savedCamp = await camp.save();
+        res.status(201).json(savedCamp);
+    } catch (error) {
+        console.error("Error creating camp:", error);
+        res.status(500).json({ message: "Error creating camp" });
+    }
+});
+
+app.get("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findById(req.params.id);
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json(camp);
+    } catch (error) {
+        console.error("Error fetching camp:", error);
+        res.status(500).json({ message: "Error fetching camp" });
+    }
+});
+
+app.put("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json(camp);
+    } catch (error) {
+        console.error("Error updating camp:", error);
+        res.status(500).json({ message: "Error updating camp" });
+    }
+});
+
+app.delete("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findByIdAndDelete(req.params.id);
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json({ message: "Camp deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting camp:", error);
+        res.status(500).json({ message: "Error deleting camp" });
+    }
+});
 
 // Admin login route
 app.post("/api/admin/login", async (req, res) => {
@@ -261,17 +337,6 @@ app.post("/api/upload", authenticateToken, upload.single("photo"), async (req, r
     } catch (error) {
         console.error("Error uploading photo:", error);
         res.status(500).json({ message: "Error uploading photo" });
-    }
-});
-
-// Get all photos endpoint
-app.get("/api/photos", async (req, res) => {
-    try {
-        const photos = await Photo.find().sort({ uploadDate: -1 });
-        res.json(photos);
-    } catch (error) {
-        console.error("Error fetching photos:", error);
-        res.status(500).json({ message: "Error fetching photos" });
     }
 });
 

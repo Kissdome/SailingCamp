@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "../../config";
 import ApplicantFilters from "../ApplicantFilters/ApplicantFilters";
 import PhotoUpload from "./PhotoUpload";
 import AdminNav from "./AdminNav";
+import CampManagement from "./CampManagement";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
@@ -188,7 +189,7 @@ const AdminDashboard = ({ onLogout }) => {
             case "photos":
                 return <PhotoUpload />;
             case "camps":
-                return <div className="section-content">Camp Management Section - Coming Soon</div>;
+                return <CampManagement />;
             case "reports":
                 return <div className="section-content">Reports Section - Coming Soon</div>;
             case "settings":
