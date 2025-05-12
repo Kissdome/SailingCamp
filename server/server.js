@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const Applicant = require("./models/Applicant");
+const Camp = require("./models/Camp");
 const jwt = require("jsonwebtoken");
 const XLSX = require("xlsx");
 const multer = require("multer");
@@ -272,6 +273,67 @@ app.get("/api/photos", async (req, res) => {
     } catch (error) {
         console.error("Error fetching photos:", error);
         res.status(500).json({ message: "Error fetching photos" });
+    }
+});
+
+// Camp Management Routes
+app.get("/api/camps", authenticateToken, async (req, res) => {
+    try {
+        const camps = await Camp.find().sort({ createdAt: -1 });
+        res.json(camps);
+    } catch (error) {
+        console.error("Error fetching camps:", error);
+        res.status(500).json({ message: "Error fetching camps" });
+    }
+});
+
+app.post("/api/camps", authenticateToken, async (req, res) => {
+    try {
+        const camp = new Camp(req.body);
+        const savedCamp = await camp.save();
+        res.status(201).json(savedCamp);
+    } catch (error) {
+        console.error("Error creating camp:", error);
+        res.status(500).json({ message: "Error creating camp" });
+    }
+});
+
+app.get("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findById(req.params.id);
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json(camp);
+    } catch (error) {
+        console.error("Error fetching camp:", error);
+        res.status(500).json({ message: "Error fetching camp" });
+    }
+});
+
+app.put("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json(camp);
+    } catch (error) {
+        console.error("Error updating camp:", error);
+        res.status(500).json({ message: "Error updating camp" });
+    }
+});
+
+app.delete("/api/camps/:id", authenticateToken, async (req, res) => {
+    try {
+        const camp = await Camp.findByIdAndDelete(req.params.id);
+        if (!camp) {
+            return res.status(404).json({ message: "Camp not found" });
+        }
+        res.json({ message: "Camp deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting camp:", error);
+        res.status(500).json({ message: "Error deleting camp" });
     }
 });
 
