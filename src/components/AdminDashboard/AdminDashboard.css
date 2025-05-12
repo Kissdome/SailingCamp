@@ -1,6 +1,6 @@
 .admin-dashboard {
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -13,7 +13,7 @@
 
 .admin-header h2 {
     margin: 0;
-    color: #333;
+    color: #2d3748;
 }
 
 .admin-controls {
@@ -24,16 +24,10 @@
 
 .search-input {
     padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
-    font-size: 1rem;
-    min-width: 200px;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    font-size: 0.95rem;
+    min-width: 250px;
 }
 
 .logout-button,
@@ -41,40 +35,49 @@
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
 }
 
 .logout-button {
-    background-color: #dc3545;
+    background-color: #e53e3e;
     color: white;
 }
 
 .logout-button:hover {
-    background-color: #c82333;
+    background-color: #c53030;
 }
 
 .excel-button {
-    background-color: #28a745;
+    background-color: #38a169;
     color: white;
 }
 
 .excel-button:hover {
-    background-color: #218838;
+    background-color: #2f855a;
+}
+
+.section-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #4a5568;
 }
 
 .applicants-table-container {
-    background: white;
+    background-color: white;
+    padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    margin-top: 2rem;
 }
 
 .applicants-table-container h3 {
-    margin: 0 0 1.5rem 0;
-    color: #333;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #2d3748;
 }
 
 .table-responsive {
@@ -84,46 +87,44 @@
 .applicants-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    font-size: 0.95rem;
 }
 
 .applicants-table th,
 .applicants-table td {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .applicants-table th {
-    background-color: #f8f9fa;
+    background-color: #f7fafc;
     font-weight: 600;
-    color: #333;
+    color: #4a5568;
     cursor: pointer;
     user-select: none;
 }
 
 .applicants-table th:hover {
-    background-color: #e9ecef;
+    background-color: #edf2f7;
 }
 
 .applicants-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: #f7fafc;
 }
 
 .error-message {
-    color: #dc3545;
-    padding: 1rem;
+    color: #e53e3e;
     margin-bottom: 1rem;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    padding: 0.75rem;
+    background-color: #fff5f5;
     border-radius: 4px;
 }
 
 .no-results {
     text-align: center;
     padding: 2rem;
-    color: #666;
-    font-style: italic;
+    color: #718096;
 }
 
 .admin-loading {
@@ -131,8 +132,8 @@
     justify-content: center;
     align-items: center;
     min-height: 200px;
-    font-size: 1.2rem;
-    color: #666;
+    color: #4a5568;
+    font-size: 1.1rem;
 }
 
 @media (max-width: 768px) {
@@ -157,11 +158,5 @@
     .logout-button,
     .excel-button {
         width: 100%;
-    }
-
-    .applicants-table th,
-    .applicants-table td {
-        padding: 0.75rem;
-        font-size: 0.9rem;
     }
 }

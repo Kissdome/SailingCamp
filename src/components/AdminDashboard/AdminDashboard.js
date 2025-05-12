@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../../config";
 import ApplicantFilters from "../ApplicantFilters/ApplicantFilters";
 import PhotoUpload from "./PhotoUpload";
+import AdminNav from "./AdminNav";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
+    const [activeSection, setActiveSection] = useState("applications");
     const [applicants, setApplicants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -133,6 +134,70 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    const renderSection = () => {
+        switch (activeSection) {
+            case "applications":
+                return (
+                    <>
+                        <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} />
+                        <div className="applicants-table-container">
+                            <h3>Camp Applications</h3>
+                            {error && <div className="error-message">{error}</div>}
+                            <div className="table-responsive">
+                                <table className="applicants-table">
+                                    <thead>
+                                        <tr>
+                                            <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                            <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                            <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                            <th onClick={() => handleSort("experience")}>
+                                                Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                            </th>
+                                            <th onClick={() => handleSort("campType")}>
+                                                Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                            </th>
+                                            <th onClick={() => handleSort("startDate")}>
+                                                Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                            </th>
+                                            <th onClick={() => handleSort("registrationDate")}>
+                                                Registration Date {sortConfig.key === "registrationDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                            </th>
+                                            <th>Additional Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredApplicants.map((applicant) => (
+                                            <tr key={applicant._id}>
+                                                <td>{applicant.name}</td>
+                                                <td>{applicant.email}</td>
+                                                <td>{applicant.age}</td>
+                                                <td>{applicant.experience}</td>
+                                                <td>{applicant.campType}</td>
+                                                <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
+                                                <td>{new Date(applicant.registrationDate).toLocaleDateString()}</td>
+                                                <td>{applicant.additionalInfo}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
+                        </div>
+                    </>
+                );
+            case "photos":
+                return <PhotoUpload />;
+            case "camps":
+                return <div className="section-content">Camp Management Section - Coming Soon</div>;
+            case "reports":
+                return <div className="section-content">Reports Section - Coming Soon</div>;
+            case "settings":
+                return <div className="section-content">Settings Section - Coming Soon</div>;
+            default:
+                return null;
+        }
+    };
+
     if (loading) {
         return <div className="admin-loading">Loading...</div>;
     }
@@ -142,57 +207,23 @@ const AdminDashboard = ({ onLogout }) => {
             <div className="admin-header">
                 <h2>Admin Dashboard</h2>
                 <div className="admin-controls">
-                    <input type="text" placeholder="Search applicants..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
+                    {activeSection === "applications" && (
+                        <input type="text" placeholder="Search applicants..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
+                    )}
                     <button onClick={onLogout} className="logout-button">
                         Logout
                     </button>
-                    <button onClick={handleDownloadExcel} className="excel-button">
-                        Download Excel
-                    </button>
+                    {activeSection === "applications" && (
+                        <button onClick={handleDownloadExcel} className="excel-button">
+                            Download Excel
+                        </button>
+                    )}
                 </div>
             </div>
 
-            <PhotoUpload />
+            <AdminNav activeSection={activeSection} onSectionChange={setActiveSection} />
 
-            <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} />
-
-            <div className="applicants-table-container">
-                <h3>Camp Applications</h3>
-                {error && <div className="error-message">{error}</div>}
-                <div className="table-responsive">
-                    <table className="applicants-table">
-                        <thead>
-                            <tr>
-                                <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("experience")}>Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("campType")}>Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("startDate")}>Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                <th onClick={() => handleSort("registrationDate")}>
-                                    Registration Date {sortConfig.key === "registrationDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                </th>
-                                <th>Additional Info</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredApplicants.map((applicant) => (
-                                <tr key={applicant._id}>
-                                    <td>{applicant.name}</td>
-                                    <td>{applicant.email}</td>
-                                    <td>{applicant.age}</td>
-                                    <td>{applicant.experience}</td>
-                                    <td>{applicant.campType}</td>
-                                    <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
-                                    <td>{new Date(applicant.registrationDate).toLocaleDateString()}</td>
-                                    <td>{applicant.additionalInfo}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
-            </div>
+            {renderSection()}
         </div>
     );
 };
