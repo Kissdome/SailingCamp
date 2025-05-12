@@ -1,61 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./CampList.css";
 
 const CampList = () => {
-    const camps = [
-        {
-            id: 1,
-            name: "Beginner Sailing Camp",
-            type: "residential",
-            duration: "1 week",
-            price: "$599",
-            description: "Perfect for first-time sailors. Learn basic sailing skills, water safety, and boat handling.",
-            startDates: ["2024-06-15", "2024-07-01", "2024-07-15"],
-            ageRange: "8-12 years",
-            experience: "beginner",
-        },
-        {
-            id: 2,
-            name: "Intermediate Sailing Camp",
-            type: "residential",
-            duration: "2 weeks",
-            price: "$999",
-            description: "Build on your sailing skills with advanced techniques, racing strategies, and navigation.",
-            startDates: ["2024-06-20", "2024-07-10", "2024-07-25"],
-            ageRange: "12-16 years",
-            experience: "intermediate",
-        },
-        {
-            id: 3,
-            name: "Weekend Sailing Camp",
-            type: "walk-in",
-            duration: "3 days",
-            price: "$299",
-            description: "Perfect for busy families. Intensive weekend program covering essential sailing skills.",
-            startDates: ["2024-06-01", "2024-06-15", "2024-06-29"],
-            ageRange: "10-14 years",
-            experience: "beginner",
-        },
-        {
-            id: 4,
-            name: "Advanced Racing Camp",
-            type: "residential",
-            duration: "2 weeks",
-            price: "$1,199",
-            description: "For experienced sailors. Focus on competitive racing, advanced techniques, and regatta preparation.",
-            startDates: ["2024-07-01", "2024-07-15", "2024-07-29"],
-            ageRange: "14-18 years",
-            experience: "advanced",
-        },
-    ];
+    const [camps, setCamps] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchCamps = async () => {
+            try {
+                console.log("Fetching camps...");
+                const response = await fetch("http://localhost:5001/api/camps", {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                console.log("Response status:", response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Failed to fetch camps");
+                }
+
+                const data = await response.json();
+                console.log("Camps data received:", data);
+                setCamps(data);
+                setLoading(false);
+            } catch (err) {
+                console.error("Error in fetchCamps:", err);
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchCamps();
+    }, []);
+
+    if (loading) {
+        return (
+            <section className="camp-list-section">
+                <h2>Our Sailing Camps</h2>
+                <div className="loading">Loading camps...</div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="camp-list-section">
+                <h2>Our Sailing Camps</h2>
+                <div className="error">Error: {error}</div>
+            </section>
+        );
+    }
 
     return (
         <section className="camp-list-section">
             <h2>Our Sailing Camps</h2>
             <div className="camp-list">
                 {camps.map((camp) => (
-                    <div key={camp.id} className="camp-card">
+                    <div key={camp._id} className="camp-card">
                         <div className="camp-header">
                             <h3>{camp.name}</h3>
                             <span className={`camp-type ${camp.type}`}>{camp.type}</span>
