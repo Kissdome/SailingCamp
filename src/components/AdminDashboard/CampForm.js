@@ -299,7 +299,7 @@ const CampForm = ({ formData, handleInputChange, handleStartDateChange, addStart
     };
 
     return (
-        <form onSubmit={handleFormSubmit} className="camp-form">
+        <form onSubmit={handleFormSubmit} className="admin-camp-form">
             {renderStepIndicator()}
 
             {renderStepContent()}

@@ -230,17 +230,6 @@ app.post("/api/applicants", async (req, res) => {
             return res.status(404).json({ message: "Selected camp not found" });
         }
 
-        // Parse age range from camp
-        const [minAge, maxAge] = selectedCamp.ageRange.split("-").map((num) => parseInt(num.trim()));
-        const applicantAge = parseInt(age);
-
-        // Validate age range
-        if (applicantAge < minAge || applicantAge > maxAge) {
-            return res.status(400).json({
-                message: `Sorry, this camp is only available for ages ${selectedCamp.ageRange}. You must be between ${minAge} and ${maxAge} years old.`,
-            });
-        }
-
         // Get current number of applicants for this camp
         const currentApplicants = await Applicant.countDocuments({ camp: camp });
 

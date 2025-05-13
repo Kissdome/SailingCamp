@@ -1,5 +1,5 @@
 /* Form Styles */
-.camp-form {
+.admin-camp-form {
     padding: 2rem;
     max-width: 800px;
     margin: 0 auto;
@@ -7,7 +7,7 @@
 }
 
 /* Step Indicator Styles */
-.step-indicator {
+.admin-camp-form .step-indicator {
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
@@ -15,7 +15,7 @@
     padding: 0 1rem;
 }
 
-.step-indicator::before {
+.admin-camp-form .step-indicator::before {
     content: "";
     position: absolute;
     top: 24px;
@@ -26,7 +26,7 @@
     z-index: 1;
 }
 
-.step {
+.admin-camp-form .step {
     position: relative;
     z-index: 2;
     display: flex;
@@ -35,7 +35,7 @@
     flex: 1;
 }
 
-.step-number {
+.admin-camp-form .step-number {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -49,34 +49,34 @@
     transition: all 0.3s ease;
 }
 
-.step.active .step-number {
+.admin-camp-form .step.active .step-number {
     background-color: #4299e1;
     color: white;
 }
 
-.step.completed .step-number {
+.admin-camp-form .step.completed .step-number {
     background-color: #48bb78;
     color: white;
 }
 
-.step-label {
+.admin-camp-form .step-label {
     font-size: 0.875rem;
     color: #4a5568;
     font-weight: 500;
     text-align: center;
 }
 
-.step.active .step-label {
+.admin-camp-form .step.active .step-label {
     color: #4299e1;
     font-weight: 600;
 }
 
-.step.completed .step-label {
+.admin-camp-form .step.completed .step-label {
     color: #48bb78;
 }
 
 /* Form Section Styles */
-.form-section {
+.admin-camp-form .form-section {
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -85,7 +85,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.form-section h4 {
+.admin-camp-form .form-section h4 {
     color: #2d3748;
     font-size: 1.25rem;
     font-weight: 600;
@@ -94,17 +94,17 @@
     border-bottom: 2px solid #e2e8f0;
 }
 
-.form-grid {
+.admin-camp-form .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
 }
 
-.form-group {
+.admin-camp-form .form-group {
     margin-bottom: 1.5rem;
 }
 
-.form-group label {
+.admin-camp-form .form-group label {
     display: block;
     margin-bottom: 0.5rem;
     color: #2d3748;
@@ -112,9 +112,9 @@
     font-size: 0.95rem;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.admin-camp-form .form-group input,
+.admin-camp-form .form-group textarea,
+.admin-camp-form .form-group select {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid #e2e8f0;
@@ -125,79 +125,79 @@
     transition: all 0.2s ease;
 }
 
-.form-group input:hover,
-.form-group textarea:hover,
-.form-group select:hover {
+.admin-camp-form .form-group input:hover,
+.admin-camp-form .form-group textarea:hover,
+.admin-camp-form .form-group select:hover {
     border-color: #cbd5e0;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.admin-camp-form .form-group input:focus,
+.admin-camp-form .form-group textarea:focus,
+.admin-camp-form .form-group select:focus {
     outline: none;
     border-color: #4299e1;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
 }
 
-.form-group input.error,
-.form-group textarea.error,
-.form-group select.error {
+.admin-camp-form .form-group input.error,
+.admin-camp-form .form-group textarea.error,
+.admin-camp-form .form-group select.error {
     border-color: #e53e3e;
 }
 
-.form-group input.error:focus,
-.form-group textarea.error:focus,
-.form-group select.error:focus {
+.admin-camp-form .form-group input.error:focus,
+.admin-camp-form .form-group textarea.error:focus,
+.admin-camp-form .form-group select.error:focus {
     box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
 }
 
-.error-text {
+.admin-camp-form .error-text {
     color: #e53e3e;
     font-size: 0.875rem;
     margin-top: 0.25rem;
     display: block;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.admin-camp-form .form-group input::placeholder,
+.admin-camp-form .form-group textarea::placeholder {
     color: #a0aec0;
 }
 
-.form-group textarea {
+.admin-camp-form .form-group textarea {
     min-height: 100px;
     resize: vertical;
 }
 
-.help-text {
+.admin-camp-form .help-text {
     margin-top: 0.5rem;
     color: #718096;
     font-size: 0.875rem;
 }
 
-.required-field::after {
+.admin-camp-form .required-field::after {
     content: "*";
     color: #e53e3e;
     margin-left: 0.25rem;
 }
 
 /* Date Input Styling */
-.date-inputs-container {
+.admin-camp-form .date-inputs-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.date-input-group {
+.admin-camp-form .date-input-group {
     display: flex;
     gap: 1rem;
     align-items: center;
 }
 
-.date-input-group input {
+.admin-camp-form .date-input-group input {
     flex: 1;
 }
 
-.remove-date-button {
+.admin-camp-form .remove-date-button {
     padding: 0.5rem 1rem;
     background-color: #fc8181;
     color: #ffffff;
@@ -208,11 +208,11 @@
     transition: all 0.2s ease;
 }
 
-.remove-date-button:hover {
+.admin-camp-form .remove-date-button:hover {
     background-color: #f56565;
 }
 
-.add-date-button {
+.admin-camp-form .add-date-button {
     padding: 0.75rem 1.5rem;
     background-color: #48bb78;
     color: #ffffff;
@@ -224,19 +224,19 @@
     align-self: flex-start;
 }
 
-.add-date-button:hover {
+.admin-camp-form .add-date-button:hover {
     background-color: #38a169;
 }
 
 /* Form Actions */
-.form-actions {
+.admin-camp-form .form-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
 }
 
-.back-button {
+.admin-camp-form .back-button {
     padding: 0.75rem 1.5rem;
     background-color: #a0aec0;
     color: #ffffff;
@@ -247,11 +247,11 @@
     transition: all 0.2s ease;
 }
 
-.back-button:hover {
+.admin-camp-form .back-button:hover {
     background-color: #718096;
 }
 
-.next-button {
+.admin-camp-form .next-button {
     padding: 0.75rem 1.5rem;
     background-color: #4299e1;
     color: #ffffff;
@@ -262,11 +262,11 @@
     transition: all 0.2s ease;
 }
 
-.next-button:hover {
+.admin-camp-form .next-button:hover {
     background-color: #3182ce;
 }
 
-.submit-button {
+.admin-camp-form .submit-button {
     padding: 0.75rem 1.5rem;
     background-color: #48bb78;
     color: #ffffff;
@@ -277,13 +277,13 @@
     transition: all 0.2s ease;
 }
 
-.submit-button:hover {
+.admin-camp-form .submit-button:hover {
     background-color: #38a169;
 }
 
-.cancel-button {
+.admin-camp-form .cancel-button {
     padding: 0.75rem 1.5rem;
-    background-color: #a0aec0;
+    background-color: #e53e3e;
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -292,23 +292,23 @@
     transition: all 0.2s ease;
 }
 
-.cancel-button:hover {
-    background-color: #718096;
+.admin-camp-form .cancel-button:hover {
+    background-color: #c53030;
 }
 
 /* Error Message Styling */
-.error-message {
+.admin-camp-form .error-message {
     color: #e53e3e;
     font-size: 0.875rem;
     margin-top: 0.5rem;
-    padding: 0.75rem;
+    padding: 0.5rem;
     background-color: #fff5f5;
     border: 1px solid #feb2b2;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 /* Modal Styles */
-.modal-overlay {
+.admin-camp-form .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -321,98 +321,95 @@
     z-index: 1000;
 }
 
-.modal {
+.admin-camp-form .modal {
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 8px;
+    padding: 2rem;
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 2px solid #e2e8f0;
+.admin-camp-form .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-.modal-header h3 {
-    margin: 0;
+.admin-camp-form .modal-header h3 {
     color: #2d3748;
     font-size: 1.5rem;
     font-weight: 600;
+    margin: 0;
 }
 
-.close-button {
+.admin-camp-form .close-button {
     background: none;
     border: none;
-    font-size: 1.5rem;
     color: #4a5568;
+    font-size: 1.5rem;
     cursor: pointer;
-    padding: 0;
+    padding: 0.5rem;
     line-height: 1;
     transition: color 0.2s ease;
 }
 
-.close-button:hover {
-    color: #2d3748;
+.admin-camp-form .close-button:hover {
+    color: #e53e3e;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .camp-form {
+    .admin-camp-form {
         padding: 1rem;
     }
 
-    .form-section {
+    .admin-camp-form .form-section {
         padding: 1rem;
     }
 
-    .form-grid {
+    .admin-camp-form .form-grid {
         grid-template-columns: 1fr;
     }
 
-    .step-indicator {
+    .admin-camp-form .step-indicator {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-        padding: 0;
     }
 
-    .step-indicator::before {
+    .admin-camp-form .step-indicator::before {
         display: none;
     }
 
-    .step {
+    .admin-camp-form .step {
         flex-direction: row;
-        gap: 1rem;
         width: 100%;
     }
 
-    .step-number {
+    .admin-camp-form .step-number {
         margin-bottom: 0;
+        margin-right: 1rem;
     }
 
-    .form-actions {
+    .admin-camp-form .form-actions {
         flex-direction: column;
     }
 
-    .form-actions button {
+    .admin-camp-form .form-actions button {
         width: 100%;
     }
 
-    .date-input-group {
+    .admin-camp-form .date-input-group {
         flex-direction: column;
     }
 
-    .remove-date-button {
+    .admin-camp-form .remove-date-button {
         width: 100%;
     }
 }

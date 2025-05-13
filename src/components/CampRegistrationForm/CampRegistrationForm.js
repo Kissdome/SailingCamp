@@ -148,7 +148,7 @@ function CampRegistrationForm() {
     return (
         <div className="signup-section">
             <h2>Sign Up for a Camp</h2>
-            <form onSubmit={handleSubmit} className="camp-form">
+            <form onSubmit={handleSubmit} className="registration-form">
                 <div className="form-group">
                     <label htmlFor="camp">Select Camp:</label>
                     <select id="camp" name="camp" value={formData.camp} onChange={handleChange} required>
