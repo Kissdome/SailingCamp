@@ -33,6 +33,10 @@ const applicantSchema = new mongoose.Schema({
     additionalInfo: {
         type: String,
     },
+    camp: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Camp",
+    },
     registrationDate: {
         type: Date,
         default: Date.now,
