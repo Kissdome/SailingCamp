@@ -121,6 +121,11 @@
     font-size: 0.9rem;
 }
 
+.camp-info .value.full {
+    color: #ff4d4d;
+    font-weight: 600;
+}
+
 .register-button {
     display: block;
     background-color: #61dafb;
@@ -134,6 +139,17 @@
 
 .register-button:hover {
     background-color: #4fa8c7;
+}
+
+.register-button.disabled {
+    background-color: #666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.register-button.disabled:hover {
+    transform: none;
+    background-color: #666;
 }
 
 @media (max-width: 768px) {

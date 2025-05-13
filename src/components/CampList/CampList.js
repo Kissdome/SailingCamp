@@ -48,6 +48,18 @@ const CampList = () => {
         navigate("/register");
     };
 
+    const getCapacityStatus = (camp) => {
+        const currentApplicants = camp.applicants ? camp.applicants.length : 0;
+        const isFull = currentApplicants >= camp.maxCapacity;
+        const remainingSpots = camp.maxCapacity - currentApplicants;
+
+        return {
+            isFull,
+            remainingSpots,
+            status: isFull ? "Full" : `${remainingSpots} spots remaining`,
+        };
+    };
+
     if (loading) {
         return (
             <section className="camp-list-section">
@@ -70,46 +82,57 @@ const CampList = () => {
         <section className="camp-list-section">
             <h2>Our Sailing Camps</h2>
             <div className="camp-list">
-                {camps.map((camp) => (
-                    <div key={camp._id} className="camp-card">
-                        <div className="camp-header">
-                            <h3>{camp.name}</h3>
-                            <span className={`camp-type ${camp.type}`}>{camp.type}</span>
-                        </div>
-                        <div className="camp-details">
-                            <p className="camp-description">{camp.description}</p>
-                            <div className="camp-info">
-                                <div className="info-item">
-                                    <span className="label">Duration:</span>
-                                    <span className="value">{camp.duration}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="label">Price:</span>
-                                    <span className="value">{camp.price}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="label">Age Range:</span>
-                                    <span className="value">{camp.ageRange}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="label">Experience:</span>
-                                    <span className="value">{camp.experience}</span>
-                                </div>
+                {camps.map((camp) => {
+                    const capacityStatus = getCapacityStatus(camp);
+                    return (
+                        <div key={camp._id} className="camp-card">
+                            <div className="camp-header">
+                                <h3>{camp.name}</h3>
+                                <span className={`camp-type ${camp.type}`}>{camp.type}</span>
                             </div>
-                            <div className="camp-dates">
-                                <h4>Available Start Dates:</h4>
-                                <ul>
-                                    {camp.startDates.map((date, index) => (
-                                        <li key={index}>{new Date(date).toLocaleDateString()}</li>
-                                    ))}
-                                </ul>
+                            <div className="camp-details">
+                                <p className="camp-description">{camp.description}</p>
+                                <div className="camp-info">
+                                    <div className="info-item">
+                                        <span className="label">Duration:</span>
+                                        <span className="value">{camp.duration}</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="label">Price:</span>
+                                        <span className="value">{camp.price}</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="label">Age Range:</span>
+                                        <span className="value">{camp.ageRange}</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="label">Experience:</span>
+                                        <span className="value">{camp.experience}</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="label">Capacity:</span>
+                                        <span className={`value ${capacityStatus.isFull ? "full" : ""}`}>{capacityStatus.status}</span>
+                                    </div>
+                                </div>
+                                <div className="camp-dates">
+                                    <h4>Available Start Dates:</h4>
+                                    <ul>
+                                        {camp.startDates.map((date, index) => (
+                                            <li key={index}>{new Date(date).toLocaleDateString()}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <button
+                                    className={`register-button ${capacityStatus.isFull ? "disabled" : ""}`}
+                                    onClick={() => handleRegisterClick(camp)}
+                                    disabled={capacityStatus.isFull}
+                                >
+                                    {capacityStatus.isFull ? "Camp Full" : "Register Now"}
+                                </button>
                             </div>
-                            <button className="register-button" onClick={() => handleRegisterClick(camp)}>
-                                Register Now
-                            </button>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );

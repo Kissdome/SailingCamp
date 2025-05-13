@@ -214,46 +214,65 @@ app.get("/api/applicants", authenticateToken, async (req, res) => {
     }
 });
 
-// API Routes
+// Create a new applicant
 app.post("/api/applicants", async (req, res) => {
     try {
-        console.log("Received application data:", req.body);
+        const { name, email, age, experience, campType, startDate, additionalInfo, camp } = req.body;
 
         // Validate required fields
-        const requiredFields = ["name", "email", "age", "experience", "campType", "startDate", "camp"];
-        const missingFields = requiredFields.filter((field) => !req.body[field]);
-
-        if (missingFields.length > 0) {
-            return res.status(400).json({
-                message: `Missing required fields: ${missingFields.join(", ")}`,
-            });
+        if (!name || !email || !age || !experience || !campType || !startDate || !camp) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
         // Check if the camp exists and has available capacity
-        const camp = await Camp.findById(req.body.camp);
-        if (!camp) {
+        const selectedCamp = await Camp.findById(camp);
+        if (!selectedCamp) {
             return res.status(404).json({ message: "Selected camp not found" });
         }
 
-        // Check if the camp has reached its maximum capacity
-        const currentApplicants = await Applicant.countDocuments({ camp: camp._id });
-        if (currentApplicants >= camp.maxCapacity) {
-            return res.status(400).json({ message: "This camp has reached its maximum capacity" });
+        // Parse age range from camp
+        const [minAge, maxAge] = selectedCamp.ageRange.split("-").map((num) => parseInt(num.trim()));
+        const applicantAge = parseInt(age);
+
+        // Validate age range
+        if (applicantAge < minAge || applicantAge > maxAge) {
+            return res.status(400).json({
+                message: `Sorry, this camp is only available for ages ${selectedCamp.ageRange}. You must be between ${minAge} and ${maxAge} years old.`,
+            });
+        }
+
+        // Get current number of applicants for this camp
+        const currentApplicants = await Applicant.countDocuments({ camp: camp });
+
+        // Check if camp is at capacity
+        if (currentApplicants >= selectedCamp.maxCapacity) {
+            return res.status(400).json({
+                message: "Sorry, this camp has reached its maximum capacity",
+            });
         }
 
         // Create and save the applicant
-        const applicant = new Applicant(req.body);
-        const savedApplicant = await applicant.save();
+        const applicant = new Applicant({
+            name,
+            email,
+            age,
+            experience,
+            campType,
+            startDate,
+            additionalInfo,
+            camp,
+        });
+
+        await applicant.save();
 
         // Add the applicant to the camp's applicants array
-        camp.applicants.push(savedApplicant._id);
-        await camp.save();
+        selectedCamp.applicants.push(applicant._id);
+        await selectedCamp.save();
 
-        console.log("Successfully saved applicant:", savedApplicant);
-        res.status(201).json(savedApplicant);
+        res.status(201).json(applicant);
     } catch (error) {
-        console.error("Error saving applicant:", error);
-        res.status(500).json({ message: "Error saving application" });
+        console.error("Error creating applicant:", error);
+        res.status(500).json({ message: "Error creating applicant" });
     }
 });
 

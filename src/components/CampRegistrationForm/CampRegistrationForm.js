@@ -15,6 +15,7 @@ function CampRegistrationForm() {
         additionalInfo: "",
         camp: "",
     });
+    const [ageError, setAgeError] = useState("");
 
     useEffect(() => {
         // Fetch available camps
@@ -52,16 +53,46 @@ function CampRegistrationForm() {
         fetchCamps();
     }, []);
 
+    const validateAge = (age, campId) => {
+        const selectedCamp = camps.find((c) => c._id === campId);
+        if (!selectedCamp) return true;
+
+        const [minAge, maxAge] = selectedCamp.ageRange.split("-").map((num) => parseInt(num.trim()));
+        const applicantAge = parseInt(age);
+
+        if (applicantAge < minAge || applicantAge > maxAge) {
+            setAgeError(`Age must be between ${minAge} and ${maxAge} years for this camp`);
+            return false;
+        }
+        setAgeError("");
+        return true;
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({
             ...prevState,
             [name]: value,
         }));
+
+        // Validate age when it changes or when camp changes
+        if (name === "age" || name === "camp") {
+            if (name === "age") {
+                validateAge(value, formData.camp);
+            } else {
+                validateAge(formData.age, value);
+            }
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate age before submission
+        if (!validateAge(formData.age, formData.camp)) {
+            return;
+        }
+
         try {
             // Format the data for the database
             const dataToSend = {
@@ -104,6 +135,7 @@ function CampRegistrationForm() {
                 additionalInfo: "",
                 camp: "",
             });
+            setAgeError("");
         } catch (error) {
             console.error("Error submitting application:", error);
             alert("There was an error submitting your application: " + error.message);
@@ -165,7 +197,19 @@ function CampRegistrationForm() {
 
                 <div className="form-group">
                     <label htmlFor="age">Age:</label>
-                    <input type="number" id="age" name="age" value={formData.age} onChange={handleChange} required min="12" max="80" placeholder="Your age" />
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleChange}
+                        required
+                        min="12"
+                        max="80"
+                        placeholder="Your age"
+                        className={ageError ? "error" : ""}
+                    />
+                    {ageError && <div className="error-message">{ageError}</div>}
                 </div>
 
                 <div className="form-group">
@@ -202,7 +246,7 @@ function CampRegistrationForm() {
                     />
                 </div>
 
-                <button type="submit" className="submit-button">
+                <button type="submit" className="submit-button" disabled={!!ageError}>
                     Register for Camp
                 </button>
             </form>
