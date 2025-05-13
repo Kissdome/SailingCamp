@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../../config";
 import "./CampRegistrationForm.css";
 
 function CampRegistrationForm() {
+    const [camps, setCamps] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -12,7 +13,44 @@ function CampRegistrationForm() {
         campType: "residential",
         startDate: "",
         additionalInfo: "",
+        camp: "",
     });
+
+    useEffect(() => {
+        // Fetch available camps
+        const fetchCamps = async () => {
+            try {
+                const response = await fetch(API_ENDPOINTS.CAMPS);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch camps");
+                }
+                const data = await response.json();
+                setCamps(data);
+
+                // Check if there's a selected camp in localStorage
+                const selectedCamp = localStorage.getItem("selectedCamp");
+                if (selectedCamp) {
+                    const camp = JSON.parse(selectedCamp);
+                    // Pre-fill the form with the selected camp's data
+                    setFormData((prevData) => ({
+                        ...prevData,
+                        camp: camp._id,
+                        campType: camp.type,
+                        experience: camp.experience,
+                        // Set the first available start date as default
+                        startDate: camp.startDates[0] ? new Date(camp.startDates[0]).toISOString().split("T")[0] : "",
+                    }));
+                    // Clear the selected camp from localStorage
+                    localStorage.removeItem("selectedCamp");
+                }
+            } catch (error) {
+                console.error("Error fetching camps:", error);
+                alert("Failed to load available camps. Please try again later.");
+            }
+        };
+
+        fetchCamps();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,7 +73,7 @@ function CampRegistrationForm() {
             console.log("Sending data to server:", dataToSend);
 
             // Save to database
-            const response = await fetch("http://localhost:5001/api/applicants", {
+            const response = await fetch(API_ENDPOINTS.APPLICANTS, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -64,6 +102,7 @@ function CampRegistrationForm() {
                 campType: "residential",
                 startDate: "",
                 additionalInfo: "",
+                camp: "",
             });
         } catch (error) {
             console.error("Error submitting application:", error);
@@ -71,10 +110,49 @@ function CampRegistrationForm() {
         }
     };
 
+    // Find the selected camp to display its details
+    const selectedCamp = camps.find((camp) => camp._id === formData.camp);
+
     return (
         <div className="signup-section">
             <h2>Sign Up for a Camp</h2>
             <form onSubmit={handleSubmit} className="camp-form">
+                <div className="form-group">
+                    <label htmlFor="camp">Select Camp:</label>
+                    <select id="camp" name="camp" value={formData.camp} onChange={handleChange} required>
+                        <option value="">Select a camp</option>
+                        {camps.map((camp) => (
+                            <option key={camp._id} value={camp._id}>
+                                {camp.name} - {camp.type} ({camp.duration})
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {selectedCamp && (
+                    <div className="selected-camp-info">
+                        <h3>Selected Camp Details:</h3>
+                        <p>
+                            <strong>Name:</strong> {selectedCamp.name}
+                        </p>
+                        <p>
+                            <strong>Type:</strong> {selectedCamp.type}
+                        </p>
+                        <p>
+                            <strong>Duration:</strong> {selectedCamp.duration}
+                        </p>
+                        <p>
+                            <strong>Price:</strong> {selectedCamp.price}
+                        </p>
+                        <p>
+                            <strong>Age Range:</strong> {selectedCamp.ageRange}
+                        </p>
+                        <p>
+                            <strong>Experience Level:</strong> {selectedCamp.experience}
+                        </p>
+                    </div>
+                )}
+
                 <div className="form-group">
                     <label htmlFor="name">Full Name:</label>
                     <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="Your full name" />

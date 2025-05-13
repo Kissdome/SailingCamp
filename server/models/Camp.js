@@ -61,6 +61,12 @@ const campSchema = new mongoose.Schema({
         enum: ["active", "cancelled", "completed"],
         default: "active",
     },
+    applicants: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Applicant",
+        },
+    ],
     createdAt: {
         type: Date,
         default: Date.now,

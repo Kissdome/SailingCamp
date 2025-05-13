@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./CampList.css";
 
 const CampList = () => {
     const [camps, setCamps] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCamps = async () => {
@@ -39,6 +40,13 @@ const CampList = () => {
 
         fetchCamps();
     }, []);
+
+    const handleRegisterClick = (camp) => {
+        // Store the selected camp data in localStorage
+        localStorage.setItem("selectedCamp", JSON.stringify(camp));
+        // Navigate to the registration form
+        navigate("/register");
+    };
 
     if (loading) {
         return (
@@ -96,10 +104,10 @@ const CampList = () => {
                                     ))}
                                 </ul>
                             </div>
+                            <button className="register-button" onClick={() => handleRegisterClick(camp)}>
+                                Register Now
+                            </button>
                         </div>
-                        <Link to="/register" className="register-button">
-                            Register Now
-                        </Link>
                     </div>
                 ))}
             </div>

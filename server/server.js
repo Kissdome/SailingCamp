@@ -220,7 +220,7 @@ app.post("/api/applicants", async (req, res) => {
         console.log("Received application data:", req.body);
 
         // Validate required fields
-        const requiredFields = ["name", "email", "age", "experience", "campType", "startDate"];
+        const requiredFields = ["name", "email", "age", "experience", "campType", "startDate", "camp"];
         const missingFields = requiredFields.filter((field) => !req.body[field]);
 
         if (missingFields.length > 0) {
@@ -229,8 +229,26 @@ app.post("/api/applicants", async (req, res) => {
             });
         }
 
+        // Check if the camp exists and has available capacity
+        const camp = await Camp.findById(req.body.camp);
+        if (!camp) {
+            return res.status(404).json({ message: "Selected camp not found" });
+        }
+
+        // Check if the camp has reached its maximum capacity
+        const currentApplicants = await Applicant.countDocuments({ camp: camp._id });
+        if (currentApplicants >= camp.maxCapacity) {
+            return res.status(400).json({ message: "This camp has reached its maximum capacity" });
+        }
+
+        // Create and save the applicant
         const applicant = new Applicant(req.body);
         const savedApplicant = await applicant.save();
+
+        // Add the applicant to the camp's applicants array
+        camp.applicants.push(savedApplicant._id);
+        await camp.save();
+
         console.log("Successfully saved applicant:", savedApplicant);
         res.status(201).json(savedApplicant);
     } catch (error) {
