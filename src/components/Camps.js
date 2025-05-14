@@ -1,6 +1,7 @@
 import React from "react";
 import CampRegistrationForm from "./CampRegistrationForm";
 import CampList from "./CampList";
+import "./Camps.css";
 
 function Camps() {
     return (
