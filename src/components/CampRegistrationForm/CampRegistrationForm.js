@@ -83,6 +83,17 @@ function CampRegistrationForm() {
                 validateAge(formData.age, value);
             }
         }
+
+        // Update start date when camp is selected
+        if (name === "camp") {
+            const selectedCamp = camps.find((c) => c._id === value);
+            if (selectedCamp && selectedCamp.startDates.length > 0) {
+                setFormData((prevState) => ({
+                    ...prevState,
+                    startDate: new Date(selectedCamp.startDates[0]).toISOString().split("T")[0],
+                }));
+            }
+        }
     };
 
     const handleSubmit = async (e) => {
