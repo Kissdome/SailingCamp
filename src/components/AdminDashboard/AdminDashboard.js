@@ -17,10 +17,6 @@ const AdminDashboard = ({ onLogout }) => {
         campType: "",
         experience: "",
         camp: "",
-        dateRange: {
-            start: "",
-            end: "",
-        },
     });
     const [camps, setCamps] = useState({});
 
@@ -77,21 +73,10 @@ const AdminDashboard = ({ onLogout }) => {
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        if (name.startsWith("dateRange.")) {
-            const dateField = name.split(".")[1];
-            setFilters((prev) => ({
-                ...prev,
-                dateRange: {
-                    ...prev.dateRange,
-                    [dateField]: value,
-                },
-            }));
-        } else {
-            setFilters((prev) => ({
-                ...prev,
-                [name]: value,
-            }));
-        }
+        setFilters((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const clearFilters = () => {
@@ -99,10 +84,6 @@ const AdminDashboard = ({ onLogout }) => {
             campType: "",
             experience: "",
             camp: "",
-            dateRange: {
-                start: "",
-                end: "",
-            },
         });
     };
 
@@ -126,12 +107,7 @@ const AdminDashboard = ({ onLogout }) => {
         // Camp filter
         const matchesCamp = !filters.camp || applicant.camp === filters.camp;
 
-        // Date range filter
-        const startDate = new Date(applicant.startDate);
-        const matchesDateRange =
-            (!filters.dateRange.start || startDate >= new Date(filters.dateRange.start)) && (!filters.dateRange.end || startDate <= new Date(filters.dateRange.end));
-
-        return matchesSearch && matchesCampType && matchesExperience && matchesCamp && matchesDateRange;
+        return matchesSearch && matchesCampType && matchesExperience && matchesCamp;
     });
 
     const handleDownloadExcel = async () => {
