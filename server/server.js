@@ -217,26 +217,116 @@ app.get("/api/applicants", authenticateToken, async (req, res) => {
 // Create a new applicant
 app.post("/api/applicants", async (req, res) => {
     try {
+        // Check MongoDB connection
+        if (mongoose.connection.readyState !== 1) {
+            console.error("MongoDB not connected. Current state:", mongoose.connection.readyState);
+            return res.status(500).json({
+                message: "Database connection error. Please try again.",
+                details: "MongoDB not connected",
+            });
+        }
+
+        console.log("Received registration request:", req.body);
         const { name, email, age, experience, campType, startDate, additionalInfo, camp } = req.body;
 
         // Validate required fields
         if (!name || !email || !age || !experience || !campType || !startDate || !camp) {
-            return res.status(400).json({ message: "All fields are required" });
+            const missingFields = [];
+            if (!name) missingFields.push("name");
+            if (!email) missingFields.push("email");
+            if (!age) missingFields.push("age");
+            if (!experience) missingFields.push("experience");
+            if (!campType) missingFields.push("campType");
+            if (!startDate) missingFields.push("startDate");
+            if (!camp) missingFields.push("camp");
+
+            console.log("Missing required fields:", missingFields);
+            return res.status(400).json({
+                message: `Missing required fields: ${missingFields.join(", ")}`,
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            console.log("Invalid email format:", email);
+            return res.status(400).json({ message: "Please enter a valid email address" });
+        }
+
+        // Validate age is a number
+        const ageNum = parseInt(age);
+        if (isNaN(ageNum)) {
+            console.log("Invalid age format:", age);
+            return res.status(400).json({ message: "Age must be a valid number" });
         }
 
         // Check if the camp exists and has available capacity
-        const selectedCamp = await Camp.findById(camp);
-        if (!selectedCamp) {
-            return res.status(404).json({ message: "Selected camp not found" });
+        let selectedCamp;
+        try {
+            selectedCamp = await Camp.findById(camp);
+            if (!selectedCamp) {
+                console.log("Camp not found:", camp);
+                return res.status(404).json({ message: "Selected camp not found" });
+            }
+            console.log("Found camp:", selectedCamp);
+        } catch (campError) {
+            console.error("Error finding camp:", campError);
+            return res.status(500).json({
+                message: "Error finding camp. Please try again.",
+                details: campError.message,
+            });
+        }
+
+        // Validate age against camp's age range
+        try {
+            const [minAge, maxAge] = selectedCamp.ageRange.split("-").map((num) => parseInt(num.trim()));
+            console.log("Age validation:", { age: ageNum, minAge, maxAge, ageRange: selectedCamp.ageRange });
+            if (ageNum < minAge || ageNum > maxAge) {
+                console.log("Age out of range:", { age: ageNum, minAge, maxAge });
+                return res.status(400).json({
+                    message: `Age must be between ${minAge} and ${maxAge} years for this camp`,
+                });
+            }
+        } catch (ageRangeError) {
+            console.error("Error parsing age range:", ageRangeError);
+            return res.status(500).json({
+                message: "Error validating age range. Please try again.",
+                details: ageRangeError.message,
+            });
+        }
+
+        // Check if email is already registered
+        try {
+            const existingApplicant = await Applicant.findOne({ email });
+            if (existingApplicant) {
+                console.log("Email already registered:", email);
+                return res.status(400).json({ message: "This email is already registered" });
+            }
+        } catch (emailCheckError) {
+            console.error("Error checking email:", emailCheckError);
+            return res.status(500).json({
+                message: "Error checking email. Please try again.",
+                details: emailCheckError.message,
+            });
         }
 
         // Get current number of applicants for this camp
-        const currentApplicants = await Applicant.countDocuments({ camp: camp });
+        try {
+            const currentApplicants = await Applicant.countDocuments({ camp: camp });
+            console.log("Current applicants count:", { camp, currentApplicants, maxCapacity: selectedCamp.maxCapacity });
 
-        // Check if camp is at capacity
-        if (currentApplicants >= selectedCamp.maxCapacity) {
-            return res.status(400).json({
-                message: "Sorry, this camp has reached its maximum capacity",
+            // Check if camp is at capacity
+            if (currentApplicants >= selectedCamp.maxCapacity) {
+                console.log("Camp at capacity:", { camp, currentApplicants, maxCapacity: selectedCamp.maxCapacity });
+                return res.status(400).json({
+                    message: "Sorry, this camp has reached its maximum capacity",
+                });
+            }
+        } catch (capacityError) {
+            console.error("Error checking camp capacity:", capacityError);
+            return res.status(500).json({
+                message: "Error checking camp capacity. Please try again.",
+                details: capacityError.message,
             });
         }
 
@@ -244,7 +334,7 @@ app.post("/api/applicants", async (req, res) => {
         const applicant = new Applicant({
             name,
             email,
-            age,
+            age: ageNum,
             experience,
             campType,
             startDate,
@@ -252,16 +342,62 @@ app.post("/api/applicants", async (req, res) => {
             camp,
         });
 
-        await applicant.save();
+        console.log("Saving new applicant:", applicant);
+        try {
+            await applicant.save();
+        } catch (saveError) {
+            console.error("Error saving applicant:", saveError);
+            if (saveError.code === 11000) {
+                return res.status(400).json({ message: "This email is already registered" });
+            }
+            if (saveError.name === "ValidationError") {
+                return res.status(400).json({
+                    message: "Validation error",
+                    details: Object.values(saveError.errors).map((err) => err.message),
+                });
+            }
+            return res.status(500).json({
+                message: "Error saving applicant",
+                details: saveError.message,
+            });
+        }
 
         // Add the applicant to the camp's applicants array
-        selectedCamp.applicants.push(applicant._id);
-        await selectedCamp.save();
+        try {
+            selectedCamp.applicants.push(applicant._id);
+            await selectedCamp.save();
+        } catch (campUpdateError) {
+            console.error("Error updating camp:", campUpdateError);
+            // If we fail to update the camp, we should delete the applicant
+            await Applicant.findByIdAndDelete(applicant._id);
+            return res.status(500).json({
+                message: "Error updating camp",
+                details: campUpdateError.message,
+            });
+        }
 
+        console.log("Registration successful:", { applicantId: applicant._id });
         res.status(201).json(applicant);
     } catch (error) {
         console.error("Error creating applicant:", error);
-        res.status(500).json({ message: "Error creating applicant" });
+        console.error("Error details:", {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+            code: error.code,
+        });
+
+        // Send a more detailed error message
+        res.status(500).json({
+            message: "Error creating applicant. Please try again.",
+            details:
+                process.env.NODE_ENV === "development"
+                    ? {
+                          name: error.name,
+                          message: error.message,
+                      }
+                    : undefined,
+        });
     }
 });
 
