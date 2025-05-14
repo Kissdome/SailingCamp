@@ -1,5 +1,4 @@
 import React from "react";
-import ContactForm from "../ContactForm/ContactForm";
 import Instructors from "../Instructors/Instructors";
 import "./About.css";
 
@@ -26,7 +25,6 @@ function About() {
                     </div>
 
                     <Instructors />
-                    <ContactForm />
                 </div>
             </div>
         </div>
