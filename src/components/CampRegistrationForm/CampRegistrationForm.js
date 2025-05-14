@@ -101,7 +101,7 @@ function CampRegistrationForm() {
                 startDate: new Date(formData.startDate).toISOString(), // Format date properly
             };
 
-            console.log("Sending data to server:", dataToSend);
+            console.log("Sending registration data:", dataToSend);
 
             // Save to database
             const response = await fetch(API_ENDPOINTS.APPLICANTS, {
@@ -114,12 +114,17 @@ function CampRegistrationForm() {
                 mode: "cors",
             });
 
-            console.log("Server response status:", response.status);
-            const responseData = await response.json();
-            console.log("Server response data:", responseData);
+            let responseData;
+            try {
+                responseData = await response.json();
+                console.log("Server response:", responseData);
+            } catch (jsonError) {
+                console.error("Error parsing server response:", jsonError);
+                throw new Error("Invalid server response");
+            }
 
             if (!response.ok) {
-                throw new Error(responseData.message || "Failed to submit application");
+                throw new Error(responseData.message || `Server error: ${response.status}`);
             }
 
             alert("Thank you for registering! We will contact you with more details.");
@@ -138,7 +143,11 @@ function CampRegistrationForm() {
             setAgeError("");
         } catch (error) {
             console.error("Error submitting application:", error);
-            alert("There was an error submitting your application: " + error.message);
+            console.error("Error details:", {
+                message: error.message,
+                stack: error.stack,
+            });
+            alert(error.message || "There was an error submitting your application. Please try again.");
         }
     };
 
@@ -197,18 +206,7 @@ function CampRegistrationForm() {
 
                 <div className="form-group">
                     <label htmlFor="age">Age:</label>
-                    <input
-                        type="number"
-                        id="age"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleChange}
-                        required
-                        min="12"
-                        max="80"
-                        placeholder="Your age"
-                        className={ageError ? "error" : ""}
-                    />
+                    <input type="number" id="age" name="age" value={formData.age} onChange={handleChange} required placeholder="Your age" className={ageError ? "error" : ""} />
                     {ageError && <div className="error-message">{ageError}</div>}
                 </div>
 
