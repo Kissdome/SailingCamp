@@ -13,8 +13,6 @@ const applicantSchema = new mongoose.Schema({
     age: {
         type: Number,
         required: true,
-        min: 12,
-        max: 80,
     },
     experience: {
         type: String,
