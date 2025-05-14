@@ -1,0 +1,182 @@
+.instructors-section {
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.instructors-section h2 {
+    text-align: center;
+    color: #1a365d;
+    margin-bottom: 3rem;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.instructors-section h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #3498db, #2c3e50);
+    border-radius: 2px;
+}
+
+.instructors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    padding: 1rem;
+}
+
+.instructor-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.instructor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.instructor-image {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+}
+
+.instructor-image::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+}
+
+.instructor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.instructor-card:hover .instructor-image img {
+    transform: scale(1.05);
+}
+
+.instructor-info {
+    padding: 2rem;
+    background: white;
+}
+
+.instructor-info h3 {
+    color: #1a365d;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.instructor-role {
+    color: #2563eb;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.instructor-experience {
+    color: #4b5563;
+    margin: 0 0 1rem 0;
+    font-weight: 500;
+}
+
+.instructor-specialties {
+    margin: 1.5rem 0;
+}
+
+.instructor-specialties h4 {
+    color: #1a365d;
+    margin: 0 0 0.8rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.instructor-specialties ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.instructor-specialties li {
+    background: #f3f4f6;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    color: #1f2937;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+}
+
+.instructor-bio {
+    color: #4b5563;
+    line-height: 1.7;
+    margin: 1.5rem 0 0 0;
+    font-size: 1rem;
+}
+
+.loading-message,
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #4b5563;
+}
+
+.error-message {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-radius: 8px;
+    margin: 1rem;
+}
+
+@media (max-width: 768px) {
+    .instructors-section {
+        padding: 2rem 1rem;
+    }
+
+    .instructors-section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .instructors-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .instructor-card {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .instructor-info {
+        padding: 1.5rem;
+    }
+}

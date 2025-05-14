@@ -1,6 +1,6 @@
 import React from "react";
-import Location from "../Location/Location";
 import ContactForm from "../ContactForm/ContactForm";
+import Instructors from "../Instructors/Instructors";
 import "./About.css";
 
 function About() {
@@ -25,7 +25,7 @@ function About() {
                         </p>
                     </div>
 
-                    <Location />
+                    <Instructors />
                     <ContactForm />
                 </div>
             </div>
