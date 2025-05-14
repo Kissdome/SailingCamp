@@ -16,14 +16,17 @@ const AdminDashboard = ({ onLogout }) => {
     const [filters, setFilters] = useState({
         campType: "",
         experience: "",
+        camp: "",
         dateRange: {
             start: "",
             end: "",
         },
     });
+    const [camps, setCamps] = useState({});
 
     useEffect(() => {
         fetchApplicants();
+        fetchCamps();
     }, []);
 
     const fetchApplicants = async () => {
@@ -41,6 +44,26 @@ const AdminDashboard = ({ onLogout }) => {
         } catch (err) {
             setError(err.message);
             setLoading(false);
+        }
+    };
+
+    const fetchCamps = async () => {
+        try {
+            const token = localStorage.getItem("adminToken");
+            const response = await fetch(API_ENDPOINTS.CAMPS, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) throw new Error("Failed to fetch camps");
+            const data = await response.json();
+            const campsMap = data.reduce((acc, camp) => {
+                acc[camp._id] = camp;
+                return acc;
+            }, {});
+            setCamps(campsMap);
+        } catch (err) {
+            console.error("Error fetching camps:", err);
         }
     };
 
@@ -75,6 +98,7 @@ const AdminDashboard = ({ onLogout }) => {
         setFilters({
             campType: "",
             experience: "",
+            camp: "",
             dateRange: {
                 start: "",
                 end: "",
@@ -99,12 +123,15 @@ const AdminDashboard = ({ onLogout }) => {
         // Experience filter
         const matchesExperience = !filters.experience || applicant.experience === filters.experience;
 
+        // Camp filter
+        const matchesCamp = !filters.camp || applicant.camp === filters.camp;
+
         // Date range filter
         const startDate = new Date(applicant.startDate);
         const matchesDateRange =
             (!filters.dateRange.start || startDate >= new Date(filters.dateRange.start)) && (!filters.dateRange.end || startDate <= new Date(filters.dateRange.end));
 
-        return matchesSearch && matchesCampType && matchesExperience && matchesDateRange;
+        return matchesSearch && matchesCampType && matchesExperience && matchesCamp && matchesDateRange;
     });
 
     const handleDownloadExcel = async () => {
@@ -157,6 +184,7 @@ const AdminDashboard = ({ onLogout }) => {
                                             <th onClick={() => handleSort("campType")}>
                                                 Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}
                                             </th>
+                                            <th>Camp</th>
                                             <th onClick={() => handleSort("startDate")}>
                                                 Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
                                             </th>
@@ -174,6 +202,7 @@ const AdminDashboard = ({ onLogout }) => {
                                                 <td>{applicant.age}</td>
                                                 <td>{applicant.experience}</td>
                                                 <td>{applicant.campType}</td>
+                                                <td>{camps[applicant.camp]?.name || "N/A"}</td>
                                                 <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
                                                 <td>{new Date(applicant.registrationDate).toLocaleDateString()}</td>
                                                 <td>{applicant.additionalInfo}</td>
