@@ -62,16 +62,6 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
                 </select>
             </div>
 
-            <div className="filter-group">
-                <label htmlFor="dateRangeStart">Start Date Range:</label>
-                <input type="date" id="dateRangeStart" name="dateRange.start" value={filters.dateRange.start} onChange={onFilterChange} />
-            </div>
-
-            <div className="filter-group">
-                <label htmlFor="dateRangeEnd">End Date Range:</label>
-                <input type="date" id="dateRangeEnd" name="dateRange.end" value={filters.dateRange.end} onChange={onFilterChange} />
-            </div>
-
             <button onClick={onClearFilters} className="clear-filters-button">
                 Clear Filters
             </button>
