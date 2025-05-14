@@ -295,12 +295,12 @@ app.post("/api/applicants", async (req, res) => {
             });
         }
 
-        // Check if email is already registered
+        // Check if email is already registered for this specific camp
         try {
-            const existingApplicant = await Applicant.findOne({ email });
+            const existingApplicant = await Applicant.findOne({ email, camp });
             if (existingApplicant) {
-                console.log("Email already registered:", email);
-                return res.status(400).json({ message: "This email is already registered" });
+                console.log("Email already registered for this camp:", { email, camp });
+                return res.status(400).json({ message: "You have already registered for this camp with this email address" });
             }
         } catch (emailCheckError) {
             console.error("Error checking email:", emailCheckError);
