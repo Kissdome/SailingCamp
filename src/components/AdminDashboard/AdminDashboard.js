@@ -4,6 +4,7 @@ import ApplicantFilters from "../ApplicantFilters/ApplicantFilters";
 import PhotoUpload from "./PhotoUpload";
 import AdminNav from "./AdminNav";
 import CampManagement from "./CampManagement";
+import InstructorManagement from "../Admin/InstructorManagement";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
@@ -195,6 +196,8 @@ const AdminDashboard = ({ onLogout }) => {
                 return <PhotoUpload />;
             case "camps":
                 return <CampManagement />;
+            case "instructors":
+                return <InstructorManagement />;
             case "reports":
                 return <div className="section-content">Reports Section - Coming Soon</div>;
             case "settings":

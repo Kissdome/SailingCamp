@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const Applicant = require("./models/Applicant");
 const Camp = require("./models/Camp");
+const Instructor = require("./models/Instructor");
 const jwt = require("jsonwebtoken");
 const XLSX = require("xlsx");
 const multer = require("multer");
@@ -499,6 +500,68 @@ app.post("/api/upload", authenticateToken, upload.single("photo"), async (req, r
     } catch (error) {
         console.error("Error uploading photo:", error);
         res.status(500).json({ message: "Error uploading photo" });
+    }
+});
+
+// Public route to get all active instructors
+app.get("/api/instructors", async (req, res) => {
+    try {
+        const instructors = await Instructor.find({ isActive: true }).sort({ createdAt: -1 });
+        res.json(instructors);
+    } catch (error) {
+        console.error("Error fetching instructors:", error);
+        res.status(500).json({ message: "Error fetching instructors" });
+    }
+});
+
+// Protected route to get all instructors (including inactive)
+app.get("/api/instructors/all", authenticateToken, async (req, res) => {
+    try {
+        const instructors = await Instructor.find().sort({ createdAt: -1 });
+        res.json(instructors);
+    } catch (error) {
+        console.error("Error fetching all instructors:", error);
+        res.status(500).json({ message: "Error fetching instructors" });
+    }
+});
+
+// Protected route to create a new instructor
+app.post("/api/instructors", authenticateToken, async (req, res) => {
+    try {
+        const instructor = new Instructor(req.body);
+        const savedInstructor = await instructor.save();
+        res.status(201).json(savedInstructor);
+    } catch (error) {
+        console.error("Error creating instructor:", error);
+        res.status(500).json({ message: "Error creating instructor" });
+    }
+});
+
+// Protected route to update an instructor
+app.put("/api/instructors/:id", authenticateToken, async (req, res) => {
+    try {
+        const instructor = await Instructor.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!instructor) {
+            return res.status(404).json({ message: "Instructor not found" });
+        }
+        res.json(instructor);
+    } catch (error) {
+        console.error("Error updating instructor:", error);
+        res.status(500).json({ message: "Error updating instructor" });
+    }
+});
+
+// Protected route to delete an instructor (soft delete)
+app.delete("/api/instructors/:id", authenticateToken, async (req, res) => {
+    try {
+        const instructor = await Instructor.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
+        if (!instructor) {
+            return res.status(404).json({ message: "Instructor not found" });
+        }
+        res.json({ message: "Instructor deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting instructor:", error);
+        res.status(500).json({ message: "Error deleting instructor" });
     }
 });
 
