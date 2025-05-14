@@ -8,6 +8,7 @@ const AdminNav = ({ activeSection, onSectionChange }) => {
         { id: "camps", label: "Camp Management", icon: "⛵" },
         { id: "reports", label: "Reports", icon: "📊" },
         { id: "settings", label: "Settings", icon: "⚙️" },
+        { id: "instructors", label: "Instructors", icon: "👩‍🏫" },
     ];
 
     return (
