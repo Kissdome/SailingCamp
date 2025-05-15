@@ -154,58 +154,95 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    const handleApproval = async (applicantId, status) => {
+        try {
+            const token = localStorage.getItem("adminToken");
+            const response = await fetch(`${API_ENDPOINTS.APPLICANTS}/${applicantId}/approve`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update applicant status");
+
+            // Update the local state
+            setApplicants((prevApplicants) => prevApplicants.map((applicant) => (applicant._id === applicantId ? { ...applicant, status } : applicant)));
+        } catch (err) {
+            console.error("Error updating applicant status:", err);
+            alert("Failed to update applicant status. Please try again.");
+        }
+    };
+
     const renderSection = () => {
         switch (activeSection) {
             case "applications":
                 return (
                     <>
-                        <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} />
-                        <div className="applicants-table-container">
-                            <h3>Camp Applications</h3>
-                            {error && <div className="error-message">{error}</div>}
-                            <div className="table-responsive">
-                                <table className="applicants-table">
-                                    <thead>
-                                        <tr>
-                                            <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("experience")}>
-                                                Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th onClick={() => handleSort("campType")}>
-                                                Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th>Camp</th>
-                                            <th onClick={() => handleSort("startDate")}>
-                                                Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th onClick={() => handleSort("registrationDate")}>
-                                                Registration Date {sortConfig.key === "registrationDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th>Additional Info</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {paginatedApplicants.map((applicant) => (
-                                            <tr key={applicant._id}>
-                                                <td>{applicant.name}</td>
-                                                <td>{applicant.email}</td>
-                                                <td>{applicant.age}</td>
-                                                <td>{applicant.experience}</td>
-                                                <td>{applicant.campType}</td>
-                                                <td>{camps[applicant.camp]?.name || "N/A"}</td>
-                                                <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
-                                                <td>{new Date(applicant.registrationDate).toLocaleDateString()}</td>
-                                                <td>{applicant.additionalInfo}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        <div className="applications-header">
+                            <h2>Camp Applications</h2>
+                            <div className="applications-controls">
+                                <input
+                                    type="text"
+                                    placeholder="Search applications..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="search-input"
+                                />
+                                <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} camps={camps} />
                             </div>
-                            {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
-                            {filteredApplicants.length > 0 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
                         </div>
+                        <div className="applications-table-container">
+                            <table className="applications-table">
+                                <thead>
+                                    <tr>
+                                        <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("experience")}>
+                                            Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                        </th>
+                                        <th onClick={() => handleSort("campType")}>Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("startDate")}>Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("status")}>Status {sortConfig.key === "status" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th>Actions</th>
+                                        <th>Additional Info</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {paginatedApplicants.map((applicant) => (
+                                        <tr key={applicant._id} className={`status-${applicant.status}`}>
+                                            <td>{applicant.name}</td>
+                                            <td>{applicant.email}</td>
+                                            <td>{applicant.age}</td>
+                                            <td>{applicant.experience}</td>
+                                            <td>{applicant.campType}</td>
+                                            <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`status-badge ${applicant.status}`}>{applicant.status}</span>
+                                            </td>
+                                            <td>
+                                                {applicant.status === "pending" && (
+                                                    <div className="approval-actions">
+                                                        <button className="approve-button" onClick={() => handleApproval(applicant._id, "approved")}>
+                                                            Approve
+                                                        </button>
+                                                        <button className="reject-button" onClick={() => handleApproval(applicant._id, "rejected")}>
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td>{applicant.additionalInfo}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
+                        {filteredApplicants.length > 0 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
                     </>
                 );
             case "add-applicant":
@@ -235,16 +272,13 @@ const AdminDashboard = ({ onLogout }) => {
                 <h2>Admin Dashboard</h2>
                 <div className="admin-controls">
                     {activeSection === "applications" && (
-                        <input type="text" placeholder="Search applicants..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
-                    )}
-                    <button onClick={onLogout} className="logout-button">
-                        Logout
-                    </button>
-                    {activeSection === "applications" && (
                         <button onClick={handleDownloadExcel} className="excel-button">
                             Download Excel
                         </button>
                     )}
+                    <button onClick={onLogout} className="logout-button">
+                        Logout
+                    </button>
                 </div>
             </div>
 

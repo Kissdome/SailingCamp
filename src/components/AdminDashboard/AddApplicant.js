@@ -92,67 +92,87 @@ const AddApplicant = ({ onApplicantAdded }) => {
 
     return (
         <div className="add-applicant-container">
-            <h3>Add New Applicant</h3>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">Applicant added successfully!</div>}
-            <form onSubmit={handleSubmit} className="add-applicant-form">
-                <div className="form-group">
-                    <label htmlFor="name">Name:</label>
-                    <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+            <h2 className="add-applicant-title">Add New Applicant</h2>
+            {error && <div className="add-applicant-error">{error}</div>}
+            {success && <div className="add-applicant-success">Applicant added successfully!</div>}
+            <form className="add-applicant-form" onSubmit={handleSubmit}>
+                <div className="add-applicant-grid">
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="name">
+                            Name *
+                        </label>
+                        <input className="add-applicant-input" type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="email">
+                            Email *
+                        </label>
+                        <input className="add-applicant-input" type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="age">
+                            Age *
+                        </label>
+                        <input className="add-applicant-input" type="number" id="age" name="age" value={formData.age} onChange={handleChange} min="1" max="100" required />
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="experience">
+                            Experience Level *
+                        </label>
+                        <select className="add-applicant-select" id="experience" name="experience" value={formData.experience} onChange={handleChange} required>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="campType">
+                            Camp Type *
+                        </label>
+                        <select className="add-applicant-select" id="campType" name="campType" value={formData.campType} onChange={handleChange} required>
+                            <option value="residential">Residential</option>
+                            <option value="walk-in">Walk-in</option>
+                        </select>
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="camp">
+                            Camp *
+                        </label>
+                        <select className="add-applicant-select" id="camp" name="camp" value={formData.camp} onChange={handleChange} required>
+                            <option value="">Select a camp</option>
+                            {camps.map((camp) => (
+                                <option key={camp._id} value={camp._id}>
+                                    {camp.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="add-applicant-form-group">
+                        <label className="add-applicant-label" htmlFor="startDate">
+                            Start Date *
+                        </label>
+                        <input className="add-applicant-input" type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleChange} required />
+                    </div>
+
+                    <div className="add-applicant-form-group full-width">
+                        <label className="add-applicant-label" htmlFor="additionalInfo">
+                            Additional Information
+                        </label>
+                        <textarea className="add-applicant-textarea" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} rows="4" />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+                <div className="add-applicant-actions">
+                    <button type="submit" className="add-applicant-submit" disabled={loading}>
+                        {loading ? "Adding..." : "Add Applicant"}
+                    </button>
                 </div>
-
-                <div className="form-group">
-                    <label htmlFor="age">Age:</label>
-                    <input type="number" id="age" name="age" value={formData.age} onChange={handleChange} required min="1" />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="experience">Experience Level:</label>
-                    <select id="experience" name="experience" value={formData.experience} onChange={handleChange} required>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="campType">Camp Type:</label>
-                    <select id="campType" name="campType" value={formData.campType} onChange={handleChange} required>
-                        <option value="residential">Residential</option>
-                        <option value="walk-in">Walk-in</option>
-                    </select>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="camp">Camp:</label>
-                    <select id="camp" name="camp" value={formData.camp} onChange={handleChange} required>
-                        <option value="">Select a camp</option>
-                        {camps.map((camp) => (
-                            <option key={camp._id} value={camp._id}>
-                                {camp.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="startDate">Start Date:</label>
-                    <input type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleChange} required />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="additionalInfo">Additional Info:</label>
-                    <textarea id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} rows="3" />
-                </div>
-
-                <button type="submit" className="submit-button" disabled={loading}>
-                    {loading ? "Adding..." : "Add Applicant"}
-                </button>
             </form>
         </div>
     );

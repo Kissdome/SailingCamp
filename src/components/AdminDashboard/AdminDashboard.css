@@ -67,50 +67,155 @@
     color: #4a5568;
 }
 
-.applicants-table-container {
-    background-color: white;
-    padding: 1.5rem;
+.applications-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.applicants-table-container h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
+.applications-table {
+    width: 100%;
+    min-width: 1200px; /* Ensure minimum width for content */
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.applications-table th,
+.applications-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.applications-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #4a5568;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.applications-table td {
     color: #2d3748;
 }
 
-.table-responsive {
-    overflow-x: auto;
+/* Make certain columns more compact */
+.applications-table td:nth-child(1), /* Name */
+.applications-table td:nth-child(2), /* Email */
+.applications-table td:nth-child(3), /* Age */
+.applications-table td:nth-child(4), /* Experience */
+.applications-table td:nth-child(5), /* Camp Type */
+.applications-table td:nth-child(6), /* Start Date */
+.applications-table td:nth-child(7), /* Status */
+.applications-table td:nth-child(8) {
+    /* Actions */
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.applicants-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
+/* Make the Additional Info column wider but still scrollable */
+.applications-table td:last-child {
+    min-width: 200px;
+    max-width: 300px;
+    white-space: normal;
+    word-break: break-word;
 }
 
-.applicants-table th,
-.applicants-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.applicants-table th {
-    background-color: #f7fafc;
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #4a5568;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.approved {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.rejected {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Approval actions */
+.approval-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.approve-button,
+.reject-button {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
     cursor: pointer;
-    user-select: none;
+    transition: all 0.2s ease;
 }
 
-.applicants-table th:hover {
-    background-color: #edf2f7;
+.approve-button {
+    background-color: #dcfce7;
+    color: #166534;
 }
 
-.applicants-table tr:hover {
-    background-color: #f7fafc;
+.approve-button:hover {
+    background-color: #bbf7d0;
+}
+
+.reject-button {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.reject-button:hover {
+    background-color: #fecaca;
+}
+
+/* Row hover effect */
+.applications-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Status-based row colors */
+.status-pending {
+    background-color: #fffaf0;
+}
+
+.status-approved {
+    background-color: #f0fff4;
+}
+
+.status-rejected {
+    background-color: #fff5f5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .applications-table-container {
+        margin: 0 -1rem;
+        border-radius: 0;
+    }
+
+    .applications-table th,
+    .applications-table td {
+        padding: 0.5rem;
+    }
 }
 
 .error-message {
