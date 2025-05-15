@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-function Gallery() {
+const Gallery = ({ images: initialImages }) => {
     const [selectedImage, setSelectedImage] = useState(null);
 
-    const images = [
+    const images = initialImages || [
         {
             url: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0",
             title: "Sailing at Sunset",
@@ -39,32 +40,40 @@ function Gallery() {
     };
 
     return (
-        <div className="page-container gallery-page">
-            <div className="content-overlay gallery-content">
-                <h1>Sailing Gallery</h1>
-                <div className="gallery-grid">
-                    {images.map((image, index) => (
-                        <div key={index} className="gallery-item" onClick={() => handleImageClick(image)}>
-                            <img src={image.url} alt={image.title} />
-                            <div className="gallery-caption">{image.title}</div>
+        <div className="gallery">
+            <div className="gallery-grid">
+                {images.map((image, index) => (
+                    <div key={index} className="gallery-item" onClick={() => handleImageClick(image)}>
+                        <img src={image.url} alt={image.title} />
+                        <div className="image-overlay">
+                            <h3>{image.title}</h3>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
 
             {selectedImage && (
-                <div className="modal-overlay" onClick={handleCloseModal}>
+                <div className="modal" onClick={handleCloseModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={handleCloseModal}>
+                        <button className="close-button" onClick={handleCloseModal}>
                             ×
                         </button>
                         <img src={selectedImage.url} alt={selectedImage.title} />
-                        <div className="modal-caption">{selectedImage.title}</div>
+                        <h3>{selectedImage.title}</h3>
                     </div>
                 </div>
             )}
         </div>
     );
-}
+};
+
+Gallery.propTypes = {
+    images: PropTypes.arrayOf(
+        PropTypes.shape({
+            url: PropTypes.string.isRequired,
+            title: PropTypes.string.isRequired,
+        })
+    ),
+};
 
 export default Gallery;

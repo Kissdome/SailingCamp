@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "../CampForm.css";
 
 const FormActions = ({ currentStep, totalSteps, handleBack, handleNext, handleSubmit, closeModal, editingCamp }) => {
@@ -23,6 +24,20 @@ const FormActions = ({ currentStep, totalSteps, handleBack, handleNext, handleSu
             </button>
         </div>
     );
+};
+
+FormActions.propTypes = {
+    currentStep: PropTypes.number.isRequired,
+    totalSteps: PropTypes.number.isRequired,
+    handleBack: PropTypes.func.isRequired,
+    handleNext: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    closeModal: PropTypes.func.isRequired,
+    editingCamp: PropTypes.object,
+};
+
+FormActions.defaultProps = {
+    editingCamp: null,
 };
 
 export default FormActions;

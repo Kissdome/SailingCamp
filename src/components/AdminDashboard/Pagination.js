@@ -8,6 +8,7 @@
  */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./Pagination.css";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -92,6 +93,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             </button>
         </div>
     );
+};
+
+Pagination.propTypes = {
+    currentPage: PropTypes.number.isRequired,
+    totalPages: PropTypes.number.isRequired,
+    onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;

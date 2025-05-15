@@ -1,7 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "../CampForm.css";
 
 const AdditionalInfoStep = ({ formData, handleInputChange, handleStartDateChange, addStartDateField, removeStartDateField, validationErrors }) => {
+    const { description, requirements, startDates } = formData;
+    const { description: descriptionError, startDates: startDatesError } = validationErrors;
+
     return (
         <div className="form-section">
             <h4>Additional Information</h4>
@@ -12,45 +16,39 @@ const AdditionalInfoStep = ({ formData, handleInputChange, handleStartDateChange
                 <textarea
                     id="description"
                     name="description"
-                    value={formData.description}
+                    value={description}
                     onChange={handleInputChange}
-                    className={validationErrors.description ? "error" : ""}
+                    className={descriptionError ? "error" : ""}
                     placeholder="Provide a detailed description of the camp"
                     required
                 />
-                {validationErrors.description && <span className="error-text">{validationErrors.description}</span>}
+                {descriptionError && <span className="error-text">{descriptionError}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="requirements">Requirements</label>
-                <textarea
-                    id="requirements"
-                    name="requirements"
-                    value={formData.requirements}
-                    onChange={handleInputChange}
-                    placeholder="List any specific requirements for campers"
-                />
+                <textarea id="requirements" name="requirements" value={requirements} onChange={handleInputChange} placeholder="List any specific requirements for campers" />
                 <span className="help-text">Optional: Specify any prerequisites or requirements for campers</span>
             </div>
             <div className="form-group">
                 <label className="required-field">Start Dates</label>
                 <div className="date-inputs-container">
-                    {formData.startDates.map((date, index) => (
+                    {startDates.map((date, index) => (
                         <div key={index} className="date-input-group">
                             <input
                                 type="date"
-                                className={`start-date-input ${validationErrors.startDates ? "error" : ""}`}
+                                className={`start-date-input ${startDatesError ? "error" : ""}`}
                                 value={date}
                                 onChange={(e) => handleStartDateChange(index, e.target.value)}
                                 required
                             />
-                            {formData.startDates.length > 1 && (
+                            {startDates.length > 1 && (
                                 <button type="button" className="remove-date-button" onClick={() => removeStartDateField(index)} title="Remove date">
                                     Remove
                                 </button>
                             )}
                         </div>
                     ))}
-                    {validationErrors.startDates && <span className="error-text">{validationErrors.startDates}</span>}
+                    {startDatesError && <span className="error-text">{startDatesError}</span>}
                     <button type="button" className="add-date-button" onClick={addStartDateField} title="Add another start date">
                         Add Another Start Date
                     </button>
@@ -58,6 +56,26 @@ const AdditionalInfoStep = ({ formData, handleInputChange, handleStartDateChange
             </div>
         </div>
     );
+};
+
+AdditionalInfoStep.propTypes = {
+    formData: PropTypes.shape({
+        description: PropTypes.string.isRequired,
+        requirements: PropTypes.string,
+        startDates: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }).isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    handleStartDateChange: PropTypes.func.isRequired,
+    addStartDateField: PropTypes.func.isRequired,
+    removeStartDateField: PropTypes.func.isRequired,
+    validationErrors: PropTypes.shape({
+        description: PropTypes.string,
+        startDates: PropTypes.string,
+    }),
+};
+
+AdditionalInfoStep.defaultProps = {
+    validationErrors: {},
 };
 
 export default AdditionalInfoStep;

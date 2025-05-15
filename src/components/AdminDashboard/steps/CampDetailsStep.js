@@ -1,7 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "../CampForm.css";
 
 const CampDetailsStep = ({ formData, handleInputChange, validationErrors }) => {
+    const { duration, price, ageRange, experience } = formData;
+    const { duration: durationError, price: priceError, ageRange: ageRangeError, experience: experienceError } = validationErrors;
+
     return (
         <div className="form-section">
             <h4>Camp Details</h4>
@@ -14,30 +18,21 @@ const CampDetailsStep = ({ formData, handleInputChange, validationErrors }) => {
                         type="text"
                         id="duration"
                         name="duration"
-                        value={formData.duration}
+                        value={duration}
                         onChange={handleInputChange}
                         placeholder="e.g., 1 week, 2 weeks"
-                        className={validationErrors.duration ? "error" : ""}
+                        className={durationError ? "error" : ""}
                         required
                     />
-                    {validationErrors.duration && <span className="error-text">{validationErrors.duration}</span>}
+                    {durationError && <span className="error-text">{durationError}</span>}
                     <span className="help-text">Specify the duration of the camp</span>
                 </div>
                 <div className="form-group">
                     <label htmlFor="price" className="required-field">
                         Price
                     </label>
-                    <input
-                        type="text"
-                        id="price"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        placeholder="e.g., $500"
-                        className={validationErrors.price ? "error" : ""}
-                        required
-                    />
-                    {validationErrors.price && <span className="error-text">{validationErrors.price}</span>}
+                    <input type="text" id="price" name="price" value={price} onChange={handleInputChange} placeholder="e.g., $500" className={priceError ? "error" : ""} required />
+                    {priceError && <span className="error-text">{priceError}</span>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="ageRange" className="required-field">
@@ -47,36 +42,49 @@ const CampDetailsStep = ({ formData, handleInputChange, validationErrors }) => {
                         type="text"
                         id="ageRange"
                         name="ageRange"
-                        value={formData.ageRange}
+                        value={ageRange}
                         onChange={handleInputChange}
                         placeholder="e.g., 8-12 years"
-                        className={validationErrors.ageRange ? "error" : ""}
+                        className={ageRangeError ? "error" : ""}
                         required
                     />
-                    {validationErrors.ageRange && <span className="error-text">{validationErrors.ageRange}</span>}
+                    {ageRangeError && <span className="error-text">{ageRangeError}</span>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="experience" className="required-field">
                         Experience Level
                     </label>
-                    <select
-                        id="experience"
-                        name="experience"
-                        value={formData.experience}
-                        onChange={handleInputChange}
-                        className={validationErrors.experience ? "error" : ""}
-                        required
-                    >
+                    <select id="experience" name="experience" value={experience} onChange={handleInputChange} className={experienceError ? "error" : ""} required>
                         <option value="">Select experience level</option>
                         <option value="beginner">Beginner</option>
                         <option value="intermediate">Intermediate</option>
                         <option value="advanced">Advanced</option>
                     </select>
-                    {validationErrors.experience && <span className="error-text">{validationErrors.experience}</span>}
+                    {experienceError && <span className="error-text">{experienceError}</span>}
                 </div>
             </div>
         </div>
     );
+};
+
+CampDetailsStep.propTypes = {
+    formData: PropTypes.shape({
+        duration: PropTypes.string.isRequired,
+        price: PropTypes.string.isRequired,
+        ageRange: PropTypes.string.isRequired,
+        experience: PropTypes.string.isRequired,
+    }).isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    validationErrors: PropTypes.shape({
+        duration: PropTypes.string,
+        price: PropTypes.string,
+        ageRange: PropTypes.string,
+        experience: PropTypes.string,
+    }),
+};
+
+CampDetailsStep.defaultProps = {
+    validationErrors: {},
 };
 
 export default CampDetailsStep;

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ onLogout }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
@@ -14,6 +15,14 @@ const Navbar = () => {
         return location.pathname === path;
     };
 
+    const navItems = [
+        { path: "/", label: "Home" },
+        { path: "/about", label: "About" },
+        { path: "/register", label: "Register" },
+        { path: "/contact", label: "Contact" },
+        { path: "/location", label: "Location" },
+    ];
+
     return (
         <nav className="navbar">
             <div className="nav-container">
@@ -24,40 +33,28 @@ const Navbar = () => {
                     <span className="menu-icon"></span>
                 </button>
                 <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
-                    <li>
-                        <Link to="/" className={isActive("/") ? "active" : ""}>
-                            Home
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/about" className={isActive("/about") ? "active" : ""}>
-                            About
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/register" className={isActive("/register") ? "active" : ""}>
-                            Register
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/contact" className={isActive("/contact") ? "active" : ""}>
-                            Contact
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/location" className={isActive("/location") ? "active" : ""}>
-                            Location
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/admin" className="admin-link">
-                            Admin
-                        </Link>
-                    </li>
+                    {navItems.map(({ path, label }) => (
+                        <li key={path}>
+                            <Link to={path} className={isActive(path) ? "active" : ""}>
+                                {label}
+                            </Link>
+                        </li>
+                    ))}
+                    {onLogout && (
+                        <li>
+                            <button onClick={onLogout} className="logout-button">
+                                Logout
+                            </button>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>
     );
+};
+
+Navbar.propTypes = {
+    onLogout: PropTypes.func,
 };
 
 export default Navbar;
