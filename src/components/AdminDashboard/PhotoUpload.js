@@ -1,20 +1,38 @@
+/**
+ * PhotoUpload Component
+ *
+ * This component provides functionality for uploading camp photos in the admin dashboard.
+ * Features include:
+ * - Image file selection with preview
+ * - File type validation
+ * - Upload progress indication
+ * - Success/error feedback
+ * - Secure upload with authentication
+ */
+
 import React, { useState } from "react";
 import "./PhotoUpload.css";
 
 const PhotoUpload = () => {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
+    // State management for file upload process
+    const [selectedFile, setSelectedFile] = useState(null); // Stores the selected file
+    const [preview, setPreview] = useState(null); // Stores the image preview URL
+    const [uploading, setUploading] = useState(false); // Upload progress state
+    const [error, setError] = useState(null); // Error state for upload failures
+    const [success, setSuccess] = useState(false); // Success state for upload completion
 
+    /**
+     * Handles file selection from input
+     * Validates file type and creates preview
+     * @param {Event} event - The file input change event
+     */
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
         if (file) {
             if (file.type.startsWith("image/")) {
                 setSelectedFile(file);
                 setError(null);
-                // Create preview
+                // Create preview using FileReader
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     setPreview(reader.result);
@@ -28,6 +46,11 @@ const PhotoUpload = () => {
         }
     };
 
+    /**
+     * Handles the photo upload process
+     * Creates FormData and sends to server with authentication
+     * Manages upload states and provides feedback
+     */
     const handleUpload = async () => {
         if (!selectedFile) {
             setError("Please select a file first");
@@ -38,6 +61,7 @@ const PhotoUpload = () => {
         setError(null);
         setSuccess(false);
 
+        // Prepare form data for upload
         const formData = new FormData();
         formData.append("photo", selectedFile);
 
@@ -68,10 +92,12 @@ const PhotoUpload = () => {
         }
     };
 
+    // Render the photo upload interface
     return (
         <div className="photo-upload-section">
             <h3>Upload Camp Photos</h3>
             <div className="upload-container">
+                {/* File selection area */}
                 <div className="upload-area">
                     <input type="file" id="photo-upload" accept="image/*" onChange={handleFileSelect} className="file-input" />
                     <label htmlFor="photo-upload" className="upload-label">
@@ -79,15 +105,18 @@ const PhotoUpload = () => {
                     </label>
                 </div>
 
+                {/* Image preview */}
                 {preview && (
                     <div className="preview-container">
                         <img src={preview} alt="Preview" className="image-preview" />
                     </div>
                 )}
 
+                {/* Status messages */}
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">Photo uploaded successfully!</div>}
 
+                {/* Upload button */}
                 <button onClick={handleUpload} disabled={!selectedFile || uploading} className="upload-button">
                     {uploading ? "Uploading..." : "Upload Photo"}
                 </button>

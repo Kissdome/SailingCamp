@@ -1,3 +1,10 @@
+/**
+ * AdminDashboard Component
+ *
+ * This is the main administrative interface for managing camp applications, instructors, and camps.
+ * It provides functionality for viewing, filtering, sorting, and managing applicant data.
+ */
+
 import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../../config";
 import ApplicantFilters from "../ApplicantFilters/ApplicantFilters";
@@ -10,26 +17,33 @@ import Pagination from "./Pagination";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
-    const [activeSection, setActiveSection] = useState("applications");
-    const [applicants, setApplicants] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [sortConfig, setSortConfig] = useState({ key: "registrationDate", direction: "desc" });
-    const [searchTerm, setSearchTerm] = useState("");
+    // State management for different sections and data
+    const [activeSection, setActiveSection] = useState("applications"); // Controls which section is currently displayed
+    const [applicants, setApplicants] = useState([]); // Stores all applicant data
+    const [loading, setLoading] = useState(true); // Loading state indicator
+    const [error, setError] = useState(null); // Error state for handling API errors
+    const [sortConfig, setSortConfig] = useState({ key: "registrationDate", direction: "desc" }); // Sorting configuration
+    const [searchTerm, setSearchTerm] = useState(""); // Search term for filtering applicants
     const [filters, setFilters] = useState({
+        // Filter states for different criteria
         campType: "",
         experience: "",
         camp: "",
     });
-    const [camps, setCamps] = useState({});
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const [camps, setCamps] = useState({}); // Stores camp data mapped by ID
+    const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+    const itemsPerPage = 10; // Number of items to display per page
 
+    // Fetch initial data on component mount
     useEffect(() => {
         fetchApplicants();
         fetchCamps();
     }, []);
 
+    /**
+     * Fetches all applicant data from the API
+     * Includes authentication token in the request
+     */
     const fetchApplicants = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -48,6 +62,9 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    /**
+     * Fetches camp data and organizes it into a map for easy lookup
+     */
     const fetchCamps = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -68,6 +85,10 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    /**
+     * Handles sorting of applicant data
+     * @param {string} key - The field to sort by
+     */
     const handleSort = (key) => {
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -76,6 +97,10 @@ const AdminDashboard = ({ onLogout }) => {
         setSortConfig({ key, direction });
     };
 
+    /**
+     * Updates filter state when filter inputs change
+     * @param {Event} e - The change event from the filter input
+     */
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prev) => ({
@@ -84,6 +109,9 @@ const AdminDashboard = ({ onLogout }) => {
         }));
     };
 
+    /**
+     * Resets all filters to their default empty state
+     */
     const clearFilters = () => {
         setFilters({
             campType: "",
@@ -92,14 +120,23 @@ const AdminDashboard = ({ onLogout }) => {
         });
     };
 
+    /**
+     * Adds a new applicant to the list
+     * @param {Object} newApplicant - The new applicant data
+     */
     const handleApplicantAdded = (newApplicant) => {
         setApplicants((prevApplicants) => [newApplicant, ...prevApplicants]);
     };
 
+    /**
+     * Handles page changes in pagination
+     * @param {number} page - The new page number
+     */
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
+    // Sort applicants based on current sort configuration
     const sortedApplicants = [...applicants].sort((a, b) => {
         if (sortConfig.key === "registrationDate" || sortConfig.key === "startDate") {
             return sortConfig.direction === "asc" ? new Date(a[sortConfig.key]) - new Date(b[sortConfig.key]) : new Date(b[sortConfig.key]) - new Date(a[sortConfig.key]);
@@ -107,6 +144,7 @@ const AdminDashboard = ({ onLogout }) => {
         return sortConfig.direction === "asc" ? (a[sortConfig.key] > b[sortConfig.key] ? 1 : -1) : a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
     });
 
+    // Filter applicants based on search term and filters
     const filteredApplicants = sortedApplicants.filter((applicant) => {
         const matchesSearch = Object.values(applicant).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesCampType = !filters.campType || applicant.campType === filters.campType;
@@ -116,7 +154,7 @@ const AdminDashboard = ({ onLogout }) => {
         return matchesSearch && matchesCampType && matchesExperience && matchesCamp;
     });
 
-    // Calculate pagination
+    // Pagination calculations
     const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedApplicants = filteredApplicants.slice(startIndex, startIndex + itemsPerPage);
@@ -126,6 +164,9 @@ const AdminDashboard = ({ onLogout }) => {
         setCurrentPage(1);
     }, [filters, searchTerm]);
 
+    /**
+     * Downloads applicant data as an Excel file
+     */
     const handleDownloadExcel = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -154,6 +195,11 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    /**
+     * Handles applicant approval/rejection
+     * @param {string} applicantId - The ID of the applicant
+     * @param {string} status - The new status ('approved' or 'rejected')
+     */
     const handleApproval = async (applicantId, status) => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -176,6 +222,10 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    /**
+     * Renders the appropriate section based on activeSection state
+     * @returns {JSX.Element} The rendered section component
+     */
     const renderSection = () => {
         switch (activeSection) {
             case "applications":
@@ -262,10 +312,12 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    // Show loading state while data is being fetched
     if (loading) {
         return <div className="admin-loading">Loading...</div>;
     }
 
+    // Main component render
     return (
         <div className="admin-dashboard">
             <div className="admin-header">

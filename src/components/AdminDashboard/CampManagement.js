@@ -1,14 +1,30 @@
+/**
+ * CampManagement Component
+ *
+ * This component provides a complete interface for managing camp information in the admin dashboard.
+ * It allows administrators to create, read, update, and delete camp details.
+ * Features include:
+ * - Viewing all camps in a grid layout
+ * - Adding new camps
+ * - Editing existing camps
+ * - Deleting camps
+ * - Managing camp details including dates, capacity, and requirements
+ */
+
 import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../../config";
 import CampForm from "./CampForm";
 import "./CampManagement.css";
 
 const CampManagement = () => {
-    const [camps, setCamps] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingCamp, setEditingCamp] = useState(null);
+    // State management for camps and UI
+    const [camps, setCamps] = useState([]); // Stores all camp data
+    const [loading, setLoading] = useState(true); // Loading state while fetching data
+    const [error, setError] = useState(null); // Error state for API errors
+    const [isModalOpen, setIsModalOpen] = useState(false); // Controls modal visibility
+    const [editingCamp, setEditingCamp] = useState(null); // Stores camp being edited
+
+    // Form state for camp details
     const [formData, setFormData] = useState({
         name: "",
         type: "residential",
@@ -24,10 +40,15 @@ const CampManagement = () => {
         requirements: "",
     });
 
+    // Fetch camps data when component mounts
     useEffect(() => {
         fetchCamps();
     }, []);
 
+    /**
+     * Fetches all camps from the API
+     * Includes authentication token in the request
+     */
     const fetchCamps = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -46,6 +67,10 @@ const CampManagement = () => {
         }
     };
 
+    /**
+     * Handles changes to form input fields
+     * @param {Event} e - The change event from the input field
+     */
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -54,6 +79,11 @@ const CampManagement = () => {
         }));
     };
 
+    /**
+     * Handles changes to start date fields
+     * @param {number} index - Index of the start date being modified
+     * @param {string} value - New date value
+     */
     const handleStartDateChange = (index, value) => {
         const newStartDates = [...formData.startDates];
         newStartDates[index] = value;
@@ -63,6 +93,9 @@ const CampManagement = () => {
         }));
     };
 
+    /**
+     * Adds a new start date field to the form
+     */
     const addStartDateField = () => {
         setFormData((prev) => ({
             ...prev,
@@ -70,6 +103,10 @@ const CampManagement = () => {
         }));
     };
 
+    /**
+     * Removes a start date field from the form
+     * @param {number} index - Index of the start date to remove
+     */
     const removeStartDateField = (index) => {
         setFormData((prev) => ({
             ...prev,
@@ -77,6 +114,10 @@ const CampManagement = () => {
         }));
     };
 
+    /**
+     * Handles form submission for creating or updating a camp
+     * @param {Event} e - The form submission event
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -101,6 +142,10 @@ const CampManagement = () => {
         }
     };
 
+    /**
+     * Prepares the form for editing an existing camp
+     * @param {Object} camp - The camp object to edit
+     */
     const handleEdit = (camp) => {
         setEditingCamp(camp);
         setFormData({
@@ -120,6 +165,10 @@ const CampManagement = () => {
         setIsModalOpen(true);
     };
 
+    /**
+     * Handles camp deletion
+     * @param {string} campId - ID of the camp to delete
+     */
     const handleDelete = async (campId) => {
         if (!window.confirm("Are you sure you want to delete this camp?")) return;
 
@@ -140,6 +189,10 @@ const CampManagement = () => {
         }
     };
 
+    /**
+     * Opens the modal for adding a new camp
+     * Resets form data to initial state
+     */
     const openModal = () => {
         setEditingCamp(null);
         setFormData({
@@ -159,14 +212,19 @@ const CampManagement = () => {
         setIsModalOpen(true);
     };
 
+    /**
+     * Closes the modal and resets related state
+     */
     const closeModal = () => {
         setIsModalOpen(false);
         setEditingCamp(null);
         setError(null);
     };
 
+    // Show loading state while fetching data
     if (loading) return <div className="loading">Loading camps...</div>;
 
+    // Render the camp management interface
     return (
         <div className="camp-management">
             <div className="camp-management-header">
@@ -178,6 +236,7 @@ const CampManagement = () => {
 
             {error && <div className="error-message">{error}</div>}
 
+            {/* Camp grid display */}
             <div className="camps-grid">
                 {camps.map((camp) => (
                     <div key={camp._id} className="camp-card">
@@ -234,6 +293,7 @@ const CampManagement = () => {
                 ))}
             </div>
 
+            {/* Camp form modal */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal">
