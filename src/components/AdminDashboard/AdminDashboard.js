@@ -5,6 +5,8 @@ import PhotoUpload from "./PhotoUpload";
 import AdminNav from "./AdminNav";
 import CampManagement from "./CampManagement";
 import InstructorManagement from "../Admin/InstructorManagement";
+import AddApplicant from "./AddApplicant";
+import Pagination from "./Pagination";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
@@ -20,6 +22,8 @@ const AdminDashboard = ({ onLogout }) => {
         camp: "",
     });
     const [camps, setCamps] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchApplicants();
@@ -88,6 +92,14 @@ const AdminDashboard = ({ onLogout }) => {
         });
     };
 
+    const handleApplicantAdded = (newApplicant) => {
+        setApplicants((prevApplicants) => [newApplicant, ...prevApplicants]);
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const sortedApplicants = [...applicants].sort((a, b) => {
         if (sortConfig.key === "registrationDate" || sortConfig.key === "startDate") {
             return sortConfig.direction === "asc" ? new Date(a[sortConfig.key]) - new Date(b[sortConfig.key]) : new Date(b[sortConfig.key]) - new Date(a[sortConfig.key]);
@@ -96,20 +108,23 @@ const AdminDashboard = ({ onLogout }) => {
     });
 
     const filteredApplicants = sortedApplicants.filter((applicant) => {
-        // Text search filter
         const matchesSearch = Object.values(applicant).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
-
-        // Camp type filter
         const matchesCampType = !filters.campType || applicant.campType === filters.campType;
-
-        // Experience filter
         const matchesExperience = !filters.experience || applicant.experience === filters.experience;
-
-        // Camp filter
         const matchesCamp = !filters.camp || applicant.camp === filters.camp;
 
         return matchesSearch && matchesCampType && matchesExperience && matchesCamp;
     });
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedApplicants = filteredApplicants.slice(startIndex, startIndex + itemsPerPage);
+
+    // Reset to first page when filters or search changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters, searchTerm]);
 
     const handleDownloadExcel = async () => {
         try {
@@ -139,59 +154,99 @@ const AdminDashboard = ({ onLogout }) => {
         }
     };
 
+    const handleApproval = async (applicantId, status) => {
+        try {
+            const token = localStorage.getItem("adminToken");
+            const response = await fetch(`${API_ENDPOINTS.APPLICANTS}/${applicantId}/approve`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update applicant status");
+
+            // Update the local state
+            setApplicants((prevApplicants) => prevApplicants.map((applicant) => (applicant._id === applicantId ? { ...applicant, status } : applicant)));
+        } catch (err) {
+            console.error("Error updating applicant status:", err);
+            alert("Failed to update applicant status. Please try again.");
+        }
+    };
+
     const renderSection = () => {
         switch (activeSection) {
             case "applications":
                 return (
                     <>
-                        <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} onClearFilters={clearFilters} />
-                        <div className="applicants-table-container">
-                            <h3>Camp Applications</h3>
-                            {error && <div className="error-message">{error}</div>}
-                            <div className="table-responsive">
-                                <table className="applicants-table">
-                                    <thead>
-                                        <tr>
-                                            <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
-                                            <th onClick={() => handleSort("experience")}>
-                                                Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th onClick={() => handleSort("campType")}>
-                                                Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th>Camp</th>
-                                            <th onClick={() => handleSort("startDate")}>
-                                                Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th onClick={() => handleSort("registrationDate")}>
-                                                Registration Date {sortConfig.key === "registrationDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                            </th>
-                                            <th>Additional Info</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredApplicants.map((applicant) => (
-                                            <tr key={applicant._id}>
-                                                <td>{applicant.name}</td>
-                                                <td>{applicant.email}</td>
-                                                <td>{applicant.age}</td>
-                                                <td>{applicant.experience}</td>
-                                                <td>{applicant.campType}</td>
-                                                <td>{camps[applicant.camp]?.name || "N/A"}</td>
-                                                <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
-                                                <td>{new Date(applicant.registrationDate).toLocaleDateString()}</td>
-                                                <td>{applicant.additionalInfo}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        <div className="applications-header">
+                            <h2>Camp Applications</h2>
+                            <div className="applications-controls">
+                                <input
+                                    type="text"
+                                    placeholder="Search applications..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="search-input"
+                                />
+                                <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} camps={camps} />
                             </div>
-                            {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
                         </div>
+                        <div className="applications-table-container">
+                            <table className="applications-table">
+                                <thead>
+                                    <tr>
+                                        <th onClick={() => handleSort("name")}>Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("email")}>Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("age")}>Age {sortConfig.key === "age" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("experience")}>
+                                            Experience {sortConfig.key === "experience" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                        </th>
+                                        <th onClick={() => handleSort("campType")}>Camp Type {sortConfig.key === "campType" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("startDate")}>Start Date {sortConfig.key === "startDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th onClick={() => handleSort("status")}>Status {sortConfig.key === "status" && (sortConfig.direction === "asc" ? "↑" : "↓")}</th>
+                                        <th>Actions</th>
+                                        <th>Additional Info</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {paginatedApplicants.map((applicant) => (
+                                        <tr key={applicant._id} className={`status-${applicant.status}`}>
+                                            <td>{applicant.name}</td>
+                                            <td>{applicant.email}</td>
+                                            <td>{applicant.age}</td>
+                                            <td>{applicant.experience}</td>
+                                            <td>{applicant.campType}</td>
+                                            <td>{new Date(applicant.startDate).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`status-badge ${applicant.status}`}>{applicant.status}</span>
+                                            </td>
+                                            <td>
+                                                {applicant.status === "pending" && (
+                                                    <div className="approval-actions">
+                                                        <button className="approve-button" onClick={() => handleApproval(applicant._id, "approved")}>
+                                                            Approve
+                                                        </button>
+                                                        <button className="reject-button" onClick={() => handleApproval(applicant._id, "rejected")}>
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td>{applicant.additionalInfo}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
+                        {filteredApplicants.length > 0 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
                     </>
                 );
+            case "add-applicant":
+                return <AddApplicant onApplicantAdded={handleApplicantAdded} />;
             case "photos":
                 return <PhotoUpload />;
             case "camps":
@@ -217,16 +272,13 @@ const AdminDashboard = ({ onLogout }) => {
                 <h2>Admin Dashboard</h2>
                 <div className="admin-controls">
                     {activeSection === "applications" && (
-                        <input type="text" placeholder="Search applicants..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
-                    )}
-                    <button onClick={onLogout} className="logout-button">
-                        Logout
-                    </button>
-                    {activeSection === "applications" && (
                         <button onClick={handleDownloadExcel} className="excel-button">
                             Download Excel
                         </button>
                     )}
+                    <button onClick={onLogout} className="logout-button">
+                        Logout
+                    </button>
                 </div>
             </div>
 

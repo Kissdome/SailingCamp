@@ -39,6 +39,18 @@ const applicantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    status: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+    },
+    approvedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Admin",
+    },
+    approvedAt: {
+        type: Date,
+    },
 });
 
 module.exports = mongoose.model("Applicant", applicantSchema);

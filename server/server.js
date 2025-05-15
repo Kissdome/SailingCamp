@@ -12,6 +12,7 @@ const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const Photo = require("./models/Photo");
+const { authenticateToken } = require("./middleware/auth");
 
 dotenv.config();
 
@@ -29,6 +30,10 @@ app.use(
 
 // Middleware
 app.use(express.json());
+
+// Mount routes
+const applicantsRouter = require("./routes/applicants");
+app.use("/api/applicants", applicantsRouter);
 
 // Public GET /api/camps route - must be before any other routes
 app.get("/api/camps", async (req, res) => {
@@ -109,24 +114,6 @@ app.get("/api/photos", async (req, res) => {
         res.status(500).json({ message: "Error fetching photos" });
     }
 });
-
-// Middleware to verify JWT token
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-        return res.status(401).json({ message: "Access denied. No token provided." });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET || "your-secret-key", (err, user) => {
-        if (err) {
-            return res.status(403).json({ message: "Invalid token." });
-        }
-        req.user = user;
-        next();
-    });
-};
 
 // Protected routes
 app.post("/api/camps", authenticateToken, async (req, res) => {

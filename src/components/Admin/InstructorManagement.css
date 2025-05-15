@@ -1,16 +1,16 @@
-.instructor-management {
+.instructor-management-container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.instructor-management h2 {
+.instructor-management-title {
     color: #2c3e50;
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
 }
 
-.instructor-form {
+.instructor-management-form {
     background: white;
     padding: 2rem;
     border-radius: 10px;
@@ -18,19 +18,19 @@
     margin-bottom: 2rem;
 }
 
-.form-group {
+.instructor-management-form-group {
     margin-bottom: 1.5rem;
 }
 
-.form-group label {
+.instructor-management-form-group label {
     display: block;
     margin-bottom: 0.5rem;
     color: #4a5568;
     font-weight: 500;
 }
 
-.form-group input,
-.form-group textarea {
+.instructor-management-form-group input,
+.instructor-management-form-group textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #e2e8f0;
@@ -38,21 +38,21 @@
     font-size: 1rem;
 }
 
-.form-group textarea {
+.instructor-management-form-group textarea {
     min-height: 100px;
     resize: vertical;
 }
 
-.form-buttons {
+.instructor-management-form-buttons {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
 }
 
-.submit-btn,
-.cancel-btn,
-.edit-btn,
-.delete-btn {
+.instructor-management-submit-btn,
+.instructor-management-cancel-btn,
+.instructor-management-edit-btn,
+.instructor-management-delete-btn {
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 5px;
@@ -61,30 +61,30 @@
     transition: all 0.3s ease;
 }
 
-.submit-btn {
+.instructor-management-submit-btn {
     background-color: #4299e1;
     color: white;
 }
 
-.submit-btn:hover {
+.instructor-management-submit-btn:hover {
     background-color: #3182ce;
 }
 
-.cancel-btn {
+.instructor-management-cancel-btn {
     background-color: #e2e8f0;
     color: #4a5568;
 }
 
-.cancel-btn:hover {
+.instructor-management-cancel-btn:hover {
     background-color: #cbd5e0;
 }
 
-.instructors-list {
+.instructor-management-list {
     display: grid;
     gap: 1.5rem;
 }
 
-.instructor-item {
+.instructor-management-item {
     background: white;
     padding: 1.5rem;
     border-radius: 10px;
@@ -94,64 +94,64 @@
     align-items: center;
 }
 
-.instructor-info h3 {
+.instructor-management-info h3 {
     color: #2d3748;
     margin: 0 0 0.5rem 0;
     font-size: 1.3rem;
 }
 
-.instructor-info p {
+.instructor-management-info p {
     margin: 0.25rem 0;
     color: #4a5568;
 }
 
-.instructor-actions {
+.instructor-management-actions {
     display: flex;
     gap: 0.75rem;
 }
 
-.edit-btn {
+.instructor-management-edit-btn {
     background-color: #48bb78;
     color: white;
 }
 
-.edit-btn:hover {
+.instructor-management-edit-btn:hover {
     background-color: #38a169;
 }
 
-.delete-btn {
+.instructor-management-delete-btn {
     background-color: #f56565;
     color: white;
 }
 
-.delete-btn:hover {
+.instructor-management-delete-btn:hover {
     background-color: #e53e3e;
 }
 
-.loading,
-.error {
+.instructor-management-loading,
+.instructor-management-error {
     text-align: center;
     padding: 2rem;
     font-size: 1.2rem;
 }
 
-.error {
+.instructor-management-error {
     color: #e53e3e;
     background-color: #fff5f5;
     border-radius: 5px;
 }
 
 @media (max-width: 768px) {
-    .instructor-management {
+    .instructor-management-container {
         padding: 1rem;
     }
 
-    .instructor-item {
+    .instructor-management-item {
         flex-direction: column;
         gap: 1rem;
     }
 
-    .instructor-actions {
+    .instructor-management-actions {
         width: 100%;
         justify-content: flex-end;
     }

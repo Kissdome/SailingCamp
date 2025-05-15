@@ -129,61 +129,61 @@ function InstructorManagement() {
         });
     };
 
-    if (loading) return <div className="loading">Loading instructors...</div>;
-    if (error) return <div className="error">{error}</div>;
+    if (loading) return <div className="instructor-management-loading">Loading instructors...</div>;
+    if (error) return <div className="instructor-management-error">{error}</div>;
 
     return (
-        <div className="instructor-management">
-            <h2>{editingInstructor ? "Edit Instructor" : "Add New Instructor"}</h2>
+        <div className="instructor-management-container">
+            <h2 className="instructor-management-title">{editingInstructor ? "Edit Instructor" : "Add New Instructor"}</h2>
 
-            <form onSubmit={handleSubmit} className="instructor-form">
-                <div className="form-group">
+            <form onSubmit={handleSubmit} className="instructor-management-form">
+                <div className="instructor-management-form-group">
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-group">
+                <div className="instructor-management-form-group">
                     <label htmlFor="role">Role:</label>
                     <input type="text" id="role" name="role" value={formData.role} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-group">
+                <div className="instructor-management-form-group">
                     <label htmlFor="experience">Experience:</label>
                     <input type="text" id="experience" name="experience" value={formData.experience} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-group">
+                <div className="instructor-management-form-group">
                     <label htmlFor="specialties">Specialties (comma-separated):</label>
                     <input type="text" id="specialties" name="specialties" value={formData.specialties} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-group">
+                <div className="instructor-management-form-group">
                     <label htmlFor="bio">Bio:</label>
                     <textarea id="bio" name="bio" value={formData.bio} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-group">
+                <div className="instructor-management-form-group">
                     <label htmlFor="image">Image URL:</label>
                     <input type="text" id="image" name="image" value={formData.image} onChange={handleInputChange} required />
                 </div>
 
-                <div className="form-buttons">
-                    <button type="submit" className="submit-btn">
+                <div className="instructor-management-form-buttons">
+                    <button type="submit" className="instructor-management-submit-btn">
                         {editingInstructor ? "Update Instructor" : "Add Instructor"}
                     </button>
                     {editingInstructor && (
-                        <button type="button" onClick={resetForm} className="cancel-btn">
+                        <button type="button" onClick={resetForm} className="instructor-management-cancel-btn">
                             Cancel Edit
                         </button>
                     )}
                 </div>
             </form>
 
-            <h2>Current Instructors</h2>
-            <div className="instructors-list">
+            <h2 className="instructor-management-title">Current Instructors</h2>
+            <div className="instructor-management-list">
                 {instructors.map((instructor) => (
-                    <div key={instructor._id} className="instructor-item">
-                        <div className="instructor-info">
+                    <div key={instructor._id} className="instructor-management-item">
+                        <div className="instructor-management-info">
                             <h3>{instructor.name}</h3>
                             <p>
                                 <strong>Role:</strong> {instructor.role}
@@ -198,11 +198,11 @@ function InstructorManagement() {
                                 <strong>Status:</strong> {instructor.isActive ? "Active" : "Inactive"}
                             </p>
                         </div>
-                        <div className="instructor-actions">
-                            <button onClick={() => handleEdit(instructor)} className="edit-btn">
+                        <div className="instructor-management-actions">
+                            <button onClick={() => handleEdit(instructor)} className="instructor-management-edit-btn">
                                 Edit
                             </button>
-                            <button onClick={() => handleDelete(instructor._id)} className="delete-btn">
+                            <button onClick={() => handleDelete(instructor._id)} className="instructor-management-delete-btn">
                                 Delete
                             </button>
                         </div>
