@@ -5,6 +5,8 @@ import PhotoUpload from "./PhotoUpload";
 import AdminNav from "./AdminNav";
 import CampManagement from "./CampManagement";
 import InstructorManagement from "../Admin/InstructorManagement";
+import AddApplicant from "./AddApplicant";
+import Pagination from "./Pagination";
 import "./AdminDashboard.css";
 
 const AdminDashboard = ({ onLogout }) => {
@@ -20,6 +22,8 @@ const AdminDashboard = ({ onLogout }) => {
         camp: "",
     });
     const [camps, setCamps] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchApplicants();
@@ -88,6 +92,14 @@ const AdminDashboard = ({ onLogout }) => {
         });
     };
 
+    const handleApplicantAdded = (newApplicant) => {
+        setApplicants((prevApplicants) => [newApplicant, ...prevApplicants]);
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const sortedApplicants = [...applicants].sort((a, b) => {
         if (sortConfig.key === "registrationDate" || sortConfig.key === "startDate") {
             return sortConfig.direction === "asc" ? new Date(a[sortConfig.key]) - new Date(b[sortConfig.key]) : new Date(b[sortConfig.key]) - new Date(a[sortConfig.key]);
@@ -96,20 +108,23 @@ const AdminDashboard = ({ onLogout }) => {
     });
 
     const filteredApplicants = sortedApplicants.filter((applicant) => {
-        // Text search filter
         const matchesSearch = Object.values(applicant).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
-
-        // Camp type filter
         const matchesCampType = !filters.campType || applicant.campType === filters.campType;
-
-        // Experience filter
         const matchesExperience = !filters.experience || applicant.experience === filters.experience;
-
-        // Camp filter
         const matchesCamp = !filters.camp || applicant.camp === filters.camp;
 
         return matchesSearch && matchesCampType && matchesExperience && matchesCamp;
     });
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedApplicants = filteredApplicants.slice(startIndex, startIndex + itemsPerPage);
+
+    // Reset to first page when filters or search changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters, searchTerm]);
 
     const handleDownloadExcel = async () => {
         try {
@@ -172,7 +187,7 @@ const AdminDashboard = ({ onLogout }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredApplicants.map((applicant) => (
+                                        {paginatedApplicants.map((applicant) => (
                                             <tr key={applicant._id}>
                                                 <td>{applicant.name}</td>
                                                 <td>{applicant.email}</td>
@@ -189,9 +204,12 @@ const AdminDashboard = ({ onLogout }) => {
                                 </table>
                             </div>
                             {filteredApplicants.length === 0 && <div className="no-results">No applicants found</div>}
+                            {filteredApplicants.length > 0 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
                         </div>
                     </>
                 );
+            case "add-applicant":
+                return <AddApplicant onApplicantAdded={handleApplicantAdded} />;
             case "photos":
                 return <PhotoUpload />;
             case "camps":

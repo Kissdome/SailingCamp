@@ -2,25 +2,23 @@ import React from "react";
 import "./AdminNav.css";
 
 const AdminNav = ({ activeSection, onSectionChange }) => {
-    const menuItems = [
-        { id: "applications", label: "Applications", icon: "📋" },
-        { id: "photos", label: "Photo Management", icon: "📸" },
-        { id: "camps", label: "Camp Management", icon: "⛵" },
-        { id: "reports", label: "Reports", icon: "📊" },
-        { id: "settings", label: "Settings", icon: "⚙️" },
-        { id: "instructors", label: "Instructors", icon: "👩‍🏫" },
+    const sections = [
+        { id: "applications", label: "Applications" },
+        { id: "add-applicant", label: "Add Applicant" },
+        { id: "photos", label: "Photos" },
+        { id: "camps", label: "Camps" },
+        { id: "instructors", label: "Instructors" },
+        { id: "reports", label: "Reports" },
+        { id: "settings", label: "Settings" },
     ];
 
     return (
         <nav className="admin-nav">
-            <ul className="admin-nav-list">
-                {menuItems.map((item) => (
-                    <li key={item.id} className={`admin-nav-item ${activeSection === item.id ? "active" : ""}`} onClick={() => onSectionChange(item.id)}>
-                        <span className="nav-icon">{item.icon}</span>
-                        <span className="nav-label">{item.label}</span>
-                    </li>
-                ))}
-            </ul>
+            {sections.map((section) => (
+                <button key={section.id} className={`nav-button ${activeSection === section.id ? "active" : ""}`} onClick={() => onSectionChange(section.id)}>
+                    {section.label}
+                </button>
+            ))}
         </nav>
     );
 };
