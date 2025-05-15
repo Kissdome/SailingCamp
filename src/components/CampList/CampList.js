@@ -122,13 +122,15 @@ const CampList = () => {
                                         ))}
                                     </ul>
                                 </div>
-                                <button
-                                    className={`register-button ${capacityStatus.isFull ? "disabled" : ""}`}
-                                    onClick={() => handleRegisterClick(camp)}
-                                    disabled={capacityStatus.isFull}
-                                >
-                                    {capacityStatus.isFull ? "Camp Full" : "Register Now"}
-                                </button>
+                                <div className="register-button-container">
+                                    <button
+                                        className={`register-button ${capacityStatus.isFull ? "disabled" : ""}`}
+                                        onClick={() => handleRegisterClick(camp)}
+                                        disabled={capacityStatus.isFull}
+                                    >
+                                        {capacityStatus.isFull ? "Camp Full" : "Register Now"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     );
