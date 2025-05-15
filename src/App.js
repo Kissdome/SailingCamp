@@ -7,8 +7,7 @@ import About from "./components/About/About";
 import CampRegistrationForm from "./components/CampRegistrationForm/CampRegistrationForm";
 import ContactForm from "./components/ContactForm/ContactForm";
 import Location from "./components/Location/Location";
-import AdminLogin from "./components/AdminLogin/AdminLogin";
-import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import Admin from "./components/Admin";
 import "./App.css";
 
 function App() {
@@ -34,8 +33,7 @@ function App() {
                         <Route path="/register" element={<CampRegistrationForm />} />
                         <Route path="/contact" element={<ContactForm />} />
                         <Route path="/location" element={<Location />} />
-                        <Route path="/admin" element={isAuthenticated ? <Navigate to="/admin/dashboard" /> : <AdminLogin onLogin={handleLogin} />} />
-                        <Route path="/admin/dashboard" element={isAuthenticated ? <AdminDashboard onLogout={handleLogout} /> : <Navigate to="/admin" />} />
+                        <Route path="/admin" element={<Admin onLoginSuccess={handleLogin} />} />
                     </Routes>
                 </main>
                 <Footer />
