@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./AdminNav.css";
 
 const AdminNav = ({ activeSection, onSectionChange }) => {
@@ -24,13 +25,18 @@ const AdminNav = ({ activeSection, onSectionChange }) => {
     // Render the navigation menu
     return (
         <nav className="admin-nav">
-            {sections.map((section) => (
-                <button key={section.id} className={`nav-button ${activeSection === section.id ? "active" : ""}`} onClick={() => onSectionChange(section.id)}>
-                    {section.label}
+            {sections.map(({ id, label }) => (
+                <button key={id} className={`nav-button ${activeSection === id ? "active" : ""}`} onClick={() => onSectionChange(id)}>
+                    {label}
                 </button>
             ))}
         </nav>
     );
+};
+
+AdminNav.propTypes = {
+    activeSection: PropTypes.string.isRequired,
+    onSectionChange: PropTypes.func.isRequired,
 };
 
 export default AdminNav;

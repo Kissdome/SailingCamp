@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_ENDPOINTS } from "./config";
-import AdminDashboard from "./AdminDashboard";
+import PropTypes from "prop-types";
+import { API_ENDPOINTS } from "../config";
+import AdminDashboard from "./AdminDashboard/AdminDashboard";
+import "./Admin.css";
 
-function Admin() {
+const Admin = ({ onLoginSuccess }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [error, setError] = useState(null);
     const [loginData, setLoginData] = useState({
@@ -28,6 +30,9 @@ function Admin() {
             const data = await response.json();
             localStorage.setItem("adminToken", data.token);
             setIsLoggedIn(true);
+            if (onLoginSuccess) {
+                onLoginSuccess();
+            }
         } catch (err) {
             setError(err.message);
         }
@@ -39,7 +44,16 @@ function Admin() {
         navigate("/");
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setLoginData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
     if (!isLoggedIn) {
+        const { username, password } = loginData;
         return (
             <div className="admin-login">
                 <h2>Admin Login</h2>
@@ -47,11 +61,11 @@ function Admin() {
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
-                        <input type="text" id="username" value={loginData.username} onChange={(e) => setLoginData({ ...loginData, username: e.target.value })} required />
+                        <input type="text" id="username" name="username" value={username} onChange={handleInputChange} required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
-                        <input type="password" id="password" value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} required />
+                        <input type="password" id="password" name="password" value={password} onChange={handleInputChange} required />
                     </div>
                     <button type="submit" className="submit-button">
                         Login
@@ -62,6 +76,10 @@ function Admin() {
     }
 
     return <AdminDashboard onLogout={handleLogout} />;
-}
+};
+
+Admin.propTypes = {
+    onLoginSuccess: PropTypes.func,
+};
 
 export default Admin;
