@@ -1,16 +1,31 @@
+/**
+ * ApplicantFilters Component
+ *
+ * This component provides filtering functionality for the applicant list in the admin dashboard.
+ * It allows filtering by camp, camp type, and experience level.
+ * The component fetches camp data from the API and provides a user interface for applying filters.
+ */
+
 import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../../config";
 import "./ApplicantFilters.css";
 
 const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
-    const [camps, setCamps] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // State for managing camp data and component status
+    const [camps, setCamps] = useState([]); // Stores the list of available camps
+    const [loading, setLoading] = useState(true); // Loading state while fetching camps
+    const [error, setError] = useState(null); // Error state for API errors
 
+    // Fetch camps data when component mounts
     useEffect(() => {
         fetchCamps();
     }, []);
 
+    /**
+     * Fetches camp data from the API
+     * Includes authentication token in the request
+     * Updates the camps state with the fetched data
+     */
     const fetchCamps = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -29,8 +44,10 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
         }
     };
 
+    // Render the filters section
     return (
         <div className="filters-section">
+            {/* Camp filter dropdown */}
             <div className="filter-group">
                 <label htmlFor="camp">Camp:</label>
                 <select id="camp" name="camp" value={filters.camp || ""} onChange={onFilterChange}>
@@ -43,6 +60,7 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
                 </select>
             </div>
 
+            {/* Camp type filter dropdown */}
             <div className="filter-group">
                 <label htmlFor="campType">Camp Type:</label>
                 <select id="campType" name="campType" value={filters.campType} onChange={onFilterChange}>
@@ -52,6 +70,7 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
                 </select>
             </div>
 
+            {/* Experience level filter dropdown */}
             <div className="filter-group">
                 <label htmlFor="experience">Experience Level:</label>
                 <select id="experience" name="experience" value={filters.experience} onChange={onFilterChange}>
@@ -62,6 +81,7 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
                 </select>
             </div>
 
+            {/* Clear filters button */}
             <button onClick={onClearFilters} className="clear-filters-button">
                 Clear Filters
             </button>

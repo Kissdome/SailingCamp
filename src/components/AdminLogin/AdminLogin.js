@@ -1,16 +1,30 @@
+/**
+ * AdminLogin Component
+ *
+ * This component handles the admin authentication process.
+ * It provides a login form for administrators to access the admin dashboard.
+ * The component manages login state, handles form submission, and stores the authentication token.
+ */
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../../config";
 import "./AdminLogin.css";
 
 const AdminLogin = ({ onLogin }) => {
+    // State for form credentials and UI feedback
     const [credentials, setCredentials] = useState({
         username: "",
         password: "",
     });
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(""); // Stores error messages
+    const [loading, setLoading] = useState(false); // Loading state for form submission
 
+    /**
+     * Handles input changes in the login form
+     * Updates the credentials state with the new input value
+     * @param {Event} e - The change event from the input field
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCredentials((prev) => ({
@@ -19,6 +33,12 @@ const AdminLogin = ({ onLogin }) => {
         }));
     };
 
+    /**
+     * Handles form submission for admin login
+     * Makes an API call to authenticate the admin
+     * Stores the authentication token on successful login
+     * @param {Event} e - The form submission event
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
@@ -39,8 +59,9 @@ const AdminLogin = ({ onLogin }) => {
                 throw new Error(data.message || "Login failed");
             }
 
+            // Store the authentication token
             localStorage.setItem("adminToken", data.token);
-            onLogin();
+            onLogin(); // Call the parent component's login handler
         } catch (err) {
             setError(err.message || "Failed to login. Please try again.");
         } finally {
@@ -48,6 +69,7 @@ const AdminLogin = ({ onLogin }) => {
         }
     };
 
+    // Render the login form
     return (
         <div className="admin-login-container">
             <div className="admin-login">

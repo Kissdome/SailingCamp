@@ -1,8 +1,21 @@
+/**
+ * AddApplicant Component
+ *
+ * This component provides a form interface for manually adding new applicants to the system.
+ * Features include:
+ * - Form validation including age restrictions based on camp requirements
+ * - Dynamic camp selection with automatic date population
+ * - Real-time validation feedback
+ * - Success/error handling
+ * - Integration with the main applicant list
+ */
+
 import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../../config";
 import "./AddApplicant.css";
 
 const AddApplicant = ({ onApplicantAdded }) => {
+    // Form state management
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -13,17 +26,24 @@ const AddApplicant = ({ onApplicantAdded }) => {
         additionalInfo: "",
         camp: "",
     });
-    const [camps, setCamps] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-    const [ageError, setAgeError] = useState("");
-    const [selectedCampInfo, setSelectedCampInfo] = useState(null);
 
+    // Component state management
+    const [camps, setCamps] = useState([]); // Available camps list
+    const [loading, setLoading] = useState(false); // Form submission state
+    const [error, setError] = useState(null); // Error state
+    const [success, setSuccess] = useState(false); // Success state
+    const [ageError, setAgeError] = useState(""); // Age validation error
+    const [selectedCampInfo, setSelectedCampInfo] = useState(null); // Selected camp details
+
+    // Fetch available camps on component mount
     useEffect(() => {
         fetchCamps();
     }, []);
 
+    /**
+     * Fetches available camps from the API
+     * Includes authentication token in the request
+     */
     const fetchCamps = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -40,6 +60,12 @@ const AddApplicant = ({ onApplicantAdded }) => {
         }
     };
 
+    /**
+     * Validates applicant age against camp age requirements
+     * @param {string} age - Applicant's age
+     * @param {string} campId - Selected camp ID
+     * @returns {boolean} Whether the age is valid for the selected camp
+     */
     const validateAge = (age, campId) => {
         const selectedCamp = camps.find((c) => c._id === campId);
         if (!selectedCamp) return true;
@@ -55,6 +81,11 @@ const AddApplicant = ({ onApplicantAdded }) => {
         return true;
     };
 
+    /**
+     * Handles form input changes
+     * Includes validation and camp-specific logic
+     * @param {Event} e - The change event from the input field
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -88,6 +119,12 @@ const AddApplicant = ({ onApplicantAdded }) => {
         }
     };
 
+    /**
+     * Handles form submission
+     * Validates data and sends to API
+     * Manages success/error states
+     * @param {Event} e - The form submission event
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -118,6 +155,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
 
             const newApplicant = await response.json();
             setSuccess(true);
+            // Reset form after successful submission
             setFormData({
                 name: "",
                 email: "",
@@ -140,6 +178,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
         }
     };
 
+    // Render the applicant form
     return (
         <div className="add-applicant-container">
             <h2 className="add-applicant-title">Add New Applicant</h2>
@@ -147,6 +186,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
             {success && <div className="add-applicant-success">Applicant added successfully!</div>}
             <form className="add-applicant-form" onSubmit={handleSubmit}>
                 <div className="add-applicant-grid">
+                    {/* Name input */}
                     <div className="add-applicant-form-group">
                         <label className="add-applicant-label" htmlFor="name">
                             Name *
@@ -154,6 +194,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
                         <input className="add-applicant-input" type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
                     </div>
 
+                    {/* Email input */}
                     <div className="add-applicant-form-group">
                         <label className="add-applicant-label" htmlFor="email">
                             Email *
@@ -161,6 +202,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
                         <input className="add-applicant-input" type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
                     </div>
 
+                    {/* Age input with validation */}
                     <div className="add-applicant-form-group">
                         <label className="add-applicant-label" htmlFor="age">
                             Age *
@@ -179,6 +221,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
                         {ageError && <div className="add-applicant-error">{ageError}</div>}
                     </div>
 
+                    {/* Experience level selection */}
                     <div className="add-applicant-form-group">
                         <label className="add-applicant-label" htmlFor="experience">
                             Experience Level *
@@ -190,6 +233,7 @@ const AddApplicant = ({ onApplicantAdded }) => {
                         </select>
                     </div>
 
+                    {/* Camp type selection */}
                     <div className="add-applicant-form-group">
                         <label className="add-applicant-label" htmlFor="campType">
                             Camp Type *
