@@ -17,6 +17,8 @@ const AddApplicant = ({ onApplicantAdded }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const [ageError, setAgeError] = useState("");
+    const [selectedCampInfo, setSelectedCampInfo] = useState(null);
 
     useEffect(() => {
         fetchCamps();
@@ -38,16 +40,62 @@ const AddApplicant = ({ onApplicantAdded }) => {
         }
     };
 
+    const validateAge = (age, campId) => {
+        const selectedCamp = camps.find((c) => c._id === campId);
+        if (!selectedCamp) return true;
+
+        const [minAge, maxAge] = selectedCamp.ageRange.split("-").map((num) => parseInt(num.trim()));
+        const applicantAge = parseInt(age);
+
+        if (applicantAge < minAge || applicantAge > maxAge) {
+            setAgeError(`Age must be between ${minAge} and ${maxAge} years for this camp`);
+            return false;
+        }
+        setAgeError("");
+        return true;
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
+
+        // Validate age when it changes or when camp changes
+        if (name === "age" || name === "camp") {
+            if (name === "age") {
+                validateAge(value, formData.camp);
+            } else {
+                validateAge(formData.age, value);
+            }
+        }
+
+        // Update camp info and start date when camp is selected
+        if (name === "camp") {
+            const selectedCamp = camps.find((c) => c._id === value);
+            if (selectedCamp) {
+                setSelectedCampInfo(selectedCamp);
+                if (selectedCamp.startDates.length > 0) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        startDate: new Date(selectedCamp.startDates[0]).toISOString().split("T")[0],
+                    }));
+                }
+            } else {
+                setSelectedCampInfo(null);
+            }
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate age before submission
+        if (!validateAge(formData.age, formData.camp)) {
+            return;
+        }
+
         setLoading(true);
         setError(null);
         setSuccess(false);
@@ -80,6 +128,8 @@ const AddApplicant = ({ onApplicantAdded }) => {
                 additionalInfo: "",
                 camp: "",
             });
+            setAgeError("");
+            setSelectedCampInfo(null);
             if (onApplicantAdded) {
                 onApplicantAdded(newApplicant);
             }
@@ -115,7 +165,18 @@ const AddApplicant = ({ onApplicantAdded }) => {
                         <label className="add-applicant-label" htmlFor="age">
                             Age *
                         </label>
-                        <input className="add-applicant-input" type="number" id="age" name="age" value={formData.age} onChange={handleChange} min="1" max="100" required />
+                        <input
+                            className={`add-applicant-input ${ageError ? "error" : ""}`}
+                            type="number"
+                            id="age"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleChange}
+                            min="1"
+                            max="100"
+                            required
+                        />
+                        {ageError && <div className="add-applicant-error">{ageError}</div>}
                     </div>
 
                     <div className="add-applicant-form-group">
@@ -168,8 +229,39 @@ const AddApplicant = ({ onApplicantAdded }) => {
                     </div>
                 </div>
 
+                {selectedCampInfo && (
+                    <div className="add-applicant-camp-info">
+                        <h3>Camp Information</h3>
+                        <div className="add-applicant-camp-details">
+                            <div className="add-applicant-camp-detail">
+                                <strong>Age Range:</strong> {selectedCampInfo.ageRange} years
+                            </div>
+                            <div className="add-applicant-camp-detail">
+                                <strong>Duration:</strong> {selectedCampInfo.duration} days
+                            </div>
+                            <div className="add-applicant-camp-detail">
+                                <strong>Price:</strong> ${selectedCampInfo.price}
+                            </div>
+                            <div className="add-applicant-camp-detail">
+                                <strong>Experience Level:</strong> {selectedCampInfo.experience}
+                            </div>
+                            <div className="add-applicant-camp-detail full-width">
+                                <strong>Description:</strong> {selectedCampInfo.description}
+                            </div>
+                            <div className="add-applicant-camp-detail full-width">
+                                <strong>Available Start Dates:</strong>
+                                <ul className="add-applicant-dates-list">
+                                    {selectedCampInfo.startDates.map((date, index) => (
+                                        <li key={index}>{new Date(date).toLocaleDateString()}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="add-applicant-actions">
-                    <button type="submit" className="add-applicant-submit" disabled={loading}>
+                    <button type="submit" className="add-applicant-submit" disabled={loading || !!ageError}>
                         {loading ? "Adding..." : "Add Applicant"}
                     </button>
                 </div>
