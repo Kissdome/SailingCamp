@@ -3,6 +3,7 @@
     color: #fff;
     padding: 3rem 0 1rem;
     margin-top: 4rem;
+    width: 100%;
 }
 
 .footer-content {
@@ -51,6 +52,7 @@
     margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid #333;
+    width: 100%;
 }
 
 .footer-bottom p {
@@ -61,19 +63,28 @@
 @media (max-width: 768px) {
     .footer {
         padding: 2rem 0 1rem;
+        margin-top: 2rem;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
         padding: 0 1rem;
+        width: 100%;
     }
 
     .footer-section {
         text-align: center;
+        width: 100%;
     }
 
     .social-links {
         justify-content: center;
+        width: 100%;
+    }
+
+    .footer-bottom {
+        padding: 1.5rem 1rem 0;
+        width: 100%;
     }
 }
