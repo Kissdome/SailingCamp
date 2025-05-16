@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import "./Navbar.css";
@@ -6,6 +6,23 @@ import "./Navbar.css";
 const Navbar = ({ onLogout }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
+
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location]);
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isMenuOpen]);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -29,20 +46,26 @@ const Navbar = ({ onLogout }) => {
                 <Link to="/" className="nav-brand">
                     Sailing Camps
                 </Link>
-                <button className="menu-toggle" onClick={toggleMenu}>
+                <button className={`menu-toggle ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu} aria-label="Toggle navigation menu">
                     <span className="menu-icon"></span>
                 </button>
                 <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
                     {navItems.map(({ path, label }) => (
                         <li key={path}>
-                            <Link to={path} className={isActive(path) ? "active" : ""}>
+                            <Link to={path} className={isActive(path) ? "active" : ""} onClick={() => setIsMenuOpen(false)}>
                                 {label}
                             </Link>
                         </li>
                     ))}
                     {onLogout && (
                         <li>
-                            <button onClick={onLogout} className="logout-button">
+                            <button
+                                onClick={() => {
+                                    onLogout();
+                                    setIsMenuOpen(false);
+                                }}
+                                className="logout-button"
+                            >
                                 Logout
                             </button>
                         </li>
