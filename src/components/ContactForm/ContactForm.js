@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { API_ENDPOINTS } from "../../config";
 import "./ContactForm.css";
+import { useNotification } from "../../context/NotificationContext";
 
 const ContactForm = ({ onSubmit }) => {
+    const { addNotification } = useNotification();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         message: "",
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,14 +22,35 @@ const ContactForm = ({ onSubmit }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (onSubmit) {
-            onSubmit(formData);
-        } else {
-            console.log("Form submitted:", formData);
-            alert("Thank you for your message! We will get back to you soon.");
-            setFormData({ name: "", email: "", message: "" });
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(API_ENDPOINTS.CONTACT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to send message");
+            }
+
+            setFormData({
+                name: "",
+                email: "",
+                message: "",
+            });
+            addNotification("Thank you for your message! We will get back to you soon.", "success");
+        } catch (error) {
+            console.error("Error sending message:", error);
+            addNotification("Failed to send message. Please try again.", "error");
+        } finally {
+            setLoading(false);
         }
     };
 

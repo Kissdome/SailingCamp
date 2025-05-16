@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../../config";
 import "./CampRegistrationForm.css";
+import { useNotification } from "../../context/NotificationContext";
 
 function CampRegistrationForm() {
+    const { addNotification } = useNotification();
     const [camps, setCamps] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -16,6 +18,8 @@ function CampRegistrationForm() {
         camp: "",
     });
     const [ageError, setAgeError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         // Fetch available camps
@@ -46,7 +50,7 @@ function CampRegistrationForm() {
                 }
             } catch (error) {
                 console.error("Error fetching camps:", error);
-                alert("Failed to load available camps. Please try again later.");
+                addNotification("Failed to load available camps. Please try again later.", "error");
             }
         };
 
@@ -98,6 +102,8 @@ function CampRegistrationForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
 
         // Validate age before submission
         if (!validateAge(formData.age, formData.camp)) {
@@ -119,28 +125,14 @@ function CampRegistrationForm() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Accept: "application/json",
                 },
                 body: JSON.stringify(dataToSend),
-                mode: "cors",
             });
 
-            let responseData;
-            try {
-                responseData = await response.json();
-                console.log("Server response:", responseData);
-            } catch (jsonError) {
-                console.error("Error parsing server response:", jsonError);
-                throw new Error("Invalid server response");
-            }
-
             if (!response.ok) {
-                throw new Error(responseData.message || `Server error: ${response.status}`);
+                throw new Error("Failed to submit application");
             }
 
-            alert("Thank you for registering! We will contact you with more details.");
-
-            // Reset form
             setFormData({
                 name: "",
                 email: "",
@@ -152,13 +144,12 @@ function CampRegistrationForm() {
                 camp: "",
             });
             setAgeError("");
+            addNotification("Thank you for registering! We will contact you with more details.", "success");
         } catch (error) {
             console.error("Error submitting application:", error);
-            console.error("Error details:", {
-                message: error.message,
-                stack: error.stack,
-            });
-            alert(error.message || "There was an error submitting your application. Please try again.");
+            addNotification(error.message || "There was an error submitting your application. Please try again.", "error");
+        } finally {
+            setLoading(false);
         }
     };
 

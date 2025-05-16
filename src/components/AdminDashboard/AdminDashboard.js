@@ -15,8 +15,10 @@ import InstructorManagement from "../Admin/InstructorManagement";
 import AddApplicant from "./AddApplicant";
 import Pagination from "./Pagination";
 import "./AdminDashboard.css";
+import { useNotification } from "../../context/NotificationContext";
 
 const AdminDashboard = ({ onLogout }) => {
+    const { addNotification } = useNotification();
     // State management for different sections and data
     const [activeSection, setActiveSection] = useState("applications"); // Controls which section is currently displayed
     const [applicants, setApplicants] = useState([]); // Stores all applicant data
@@ -194,7 +196,7 @@ const AdminDashboard = ({ onLogout }) => {
             window.URL.revokeObjectURL(url);
         } catch (err) {
             console.error("Error downloading Excel file:", err);
-            alert("Failed to download Excel file. Please try again.");
+            addNotification("Failed to download Excel file. Please try again.", "error");
         }
     };
 
@@ -219,9 +221,10 @@ const AdminDashboard = ({ onLogout }) => {
 
             // Update the local state
             setApplicants((prevApplicants) => prevApplicants.map((applicant) => (applicant._id === applicantId ? { ...applicant, status } : applicant)));
+            addNotification(`Applicant ${status} successfully`, "success");
         } catch (err) {
             console.error("Error updating applicant status:", err);
-            alert("Failed to update applicant status. Please try again.");
+            addNotification("Failed to update applicant status. Please try again.", "error");
         }
     };
 
