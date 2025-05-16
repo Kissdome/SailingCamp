@@ -29,6 +29,7 @@ const AdminDashboard = ({ onLogout }) => {
         campType: "",
         experience: "",
         camp: "",
+        status: "", // Add status filter
     });
     const [camps, setCamps] = useState({}); // Stores camp data mapped by ID
     const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
@@ -117,6 +118,7 @@ const AdminDashboard = ({ onLogout }) => {
             campType: "",
             experience: "",
             camp: "",
+            status: "", // Reset status filter
         });
     };
 
@@ -150,8 +152,9 @@ const AdminDashboard = ({ onLogout }) => {
         const matchesCampType = !filters.campType || applicant.campType === filters.campType;
         const matchesExperience = !filters.experience || applicant.experience === filters.experience;
         const matchesCamp = !filters.camp || applicant.camp === filters.camp;
+        const matchesStatus = !filters.status || applicant.status === filters.status;
 
-        return matchesSearch && matchesCampType && matchesExperience && matchesCamp;
+        return matchesSearch && matchesCampType && matchesExperience && matchesCamp && matchesStatus;
     });
 
     // Pagination calculations

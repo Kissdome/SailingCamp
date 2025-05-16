@@ -81,6 +81,17 @@ const ApplicantFilters = ({ filters, onFilterChange, onClearFilters }) => {
                 </select>
             </div>
 
+            {/* Status filter dropdown */}
+            <div className="filter-group">
+                <label htmlFor="status">Status:</label>
+                <select id="status" name="status" value={filters.status} onChange={onFilterChange}>
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+
             {/* Clear filters button */}
             <button onClick={onClearFilters} className="clear-filters-button">
                 Clear Filters
