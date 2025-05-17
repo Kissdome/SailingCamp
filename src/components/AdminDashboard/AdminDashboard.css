@@ -2,6 +2,7 @@
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    background-color: #f8fafc;
 }
 
 .admin-header {
@@ -9,34 +10,99 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .admin-header h2 {
     margin: 0;
-    color: #2d3748;
+    color: #1a202c;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .admin-controls {
     display: flex;
     gap: 1rem;
     align-items: center;
+    position: relative;
 }
 
 .search-input {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 1px solid #e2e8f0;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 0.95rem;
-    min-width: 250px;
+    min-width: 300px;
+    background-color: white;
+    transition: all 0.2s ease;
+    color: #2d3748;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-input::placeholder {
+    color: #a0aec0;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4a5568;
+    box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.1);
+    background-color: white;
+}
+
+.search-input:hover {
+    border-color: #cbd5e0;
+}
+
+/* Add search icon */
+.search-input-container {
+    position: relative;
+}
+
+.search-input-container::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+/* Add clear button */
+.search-input-container::after {
+    content: "×";
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.search-input-container:has(input:not(:placeholder-shown))::after {
+    opacity: 1;
+}
+
+.search-input-container:has(input:not(:placeholder-shown))::after:hover {
+    color: #4a5568;
 }
 
 .logout-button,
 .excel-button {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.95rem;
+    font-weight: 500;
     transition: all 0.2s ease;
 }
 
@@ -50,19 +116,19 @@
 }
 
 .excel-button {
-    background-color: #38a169;
+    background-color: #2d3748;
     color: white;
 }
 
 .excel-button:hover {
-    background-color: #2f855a;
+    background-color: #1a202c;
 }
 
 .section-content {
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     text-align: center;
     color: #4a5568;
 }
@@ -73,19 +139,19 @@
     margin-bottom: 1rem;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .applications-table {
     width: 100%;
-    min-width: 1200px; /* Ensure minimum width for content */
+    min-width: 1200px;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .applications-table th,
 .applications-table td {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
     white-space: nowrap;
@@ -94,14 +160,14 @@
 .applications-table th {
     background-color: #f8fafc;
     font-weight: 600;
-    color: #4a5568;
+    color: #2d3748;
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
 .applications-table td {
-    color: #2d3748;
+    color: #4a5568;
 }
 
 /* Make certain columns more compact */
@@ -130,10 +196,10 @@
 /* Status badges */
 .status-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 0.75rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 500;
     text-transform: uppercase;
 }
 
@@ -160,10 +226,10 @@
 
 .approve-button,
 .reject-button {
-    padding: 0.25rem 0.75rem;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 4px;
-    font-size: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -216,20 +282,33 @@
     .applications-table td {
         padding: 0.5rem;
     }
+
+    .search-input {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .search-input-container {
+        width: 100%;
+    }
 }
 
 .error-message {
     color: #e53e3e;
     margin-bottom: 1rem;
-    padding: 0.75rem;
+    padding: 1rem;
     background-color: #fff5f5;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid #feb2b2;
 }
 
 .no-results {
     text-align: center;
     padding: 2rem;
     color: #718096;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .admin-loading {
@@ -239,6 +318,9 @@
     min-height: 200px;
     color: #4a5568;
     font-size: 1.1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -254,10 +336,6 @@
 
     .admin-controls {
         flex-direction: column;
-    }
-
-    .search-input {
-        width: 100%;
     }
 
     .logout-button,

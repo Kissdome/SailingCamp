@@ -240,13 +240,6 @@ const AdminDashboard = ({ onLogout }) => {
                         <div className="applications-header">
                             <h2>Camp Applications</h2>
                             <div className="applications-controls">
-                                <input
-                                    type="text"
-                                    placeholder="Search applications..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="search-input"
-                                />
                                 <ApplicantFilters filters={filters} onFilterChange={handleFilterChange} camps={camps} />
                             </div>
                         </div>
@@ -330,9 +323,14 @@ const AdminDashboard = ({ onLogout }) => {
                 <h2>Admin Dashboard</h2>
                 <div className="admin-controls">
                     {activeSection === "applications" && (
-                        <button onClick={handleDownloadExcel} className="excel-button">
-                            Download Excel
-                        </button>
+                        <>
+                            <div className="search-input-container">
+                                <input type="text" className="search-input" placeholder="Search applicants..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                            </div>
+                            <button onClick={handleDownloadExcel} className="excel-button">
+                                Download Excel
+                            </button>
+                        </>
                     )}
                     <button onClick={onLogout} className="logout-button">
                         Logout
