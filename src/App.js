@@ -9,6 +9,7 @@ import ContactForm from "./components/ContactForm/ContactForm";
 import Location from "./components/Location/Location";
 import Admin from "./components/Admin";
 import "./App.css";
+import { NotificationProvider } from "./context/NotificationContext";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,22 +24,24 @@ function App() {
     };
 
     return (
-        <Router>
-            <div className="App">
-                <Navbar />
-                <main className="main-content">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/register" element={<CampRegistrationForm />} />
-                        <Route path="/contact" element={<ContactForm />} />
-                        <Route path="/location" element={<Location />} />
-                        <Route path="/admin" element={<Admin onLoginSuccess={handleLogin} />} />
-                    </Routes>
-                </main>
-                <Footer />
-            </div>
-        </Router>
+        <NotificationProvider>
+            <Router>
+                <div className="App">
+                    <Navbar />
+                    <main className="main-content">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/register" element={<CampRegistrationForm />} />
+                            <Route path="/contact" element={<ContactForm />} />
+                            <Route path="/location" element={<Location />} />
+                            <Route path="/admin" element={<Admin onLoginSuccess={handleLogin} />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </Router>
+        </NotificationProvider>
     );
 }
 
