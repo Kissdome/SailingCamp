@@ -1,11 +1,27 @@
+.signup-section {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.signup-section h2 {
+    color: #1a365d;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .camp-registration-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
     padding: 2rem;
-    background-color: #f4f6f8;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .camp-registration-form .form-group {
@@ -13,7 +29,7 @@
 }
 
 .camp-registration-form .form-group label {
-    color: #000000;
+    color: #1a365d;
     display: block;
     margin-bottom: 0.8rem;
     font-size: 1.1rem;
@@ -25,13 +41,14 @@
 .camp-registration-form .form-group textarea {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    background-color: #ffffff;
+    border: 1px solid rgba(97, 218, 251, 0.3);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
     color: #2d3748;
     font-size: 1rem;
     margin-top: 0.5rem;
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
 .camp-registration-form .form-group input:focus,
@@ -39,32 +56,36 @@
 .camp-registration-form .form-group textarea:focus {
     outline: none;
     border-color: #61dafb;
-    box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.15);
+    box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.2);
+    background-color: #ffffff;
 }
 
 .camp-registration-form .form-group input::placeholder,
 .camp-registration-form .form-group textarea::placeholder {
-    color: #000000;
+    color: #4a5568;
     opacity: 0.6;
 }
 
 .camp-registration-form .submit-button {
     grid-column: 1 / -1;
-    background-color: #61dafb;
-    color: #282c34;
+    background: linear-gradient(135deg, #61dafb 0%, #4fa8c7 100%);
+    color: #ffffff;
     padding: 1.2rem 2rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(97, 218, 251, 0.3);
 }
 
 .camp-registration-form .submit-button:hover {
-    background-color: #4fa8c7;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(97, 218, 251, 0.4);
 }
 
 .camp-registration-form .submit-button:active {
@@ -73,14 +94,13 @@
 
 .camp-registration-form .selected-camp-info {
     grid-column: 1 / -1;
-    background-color: #f0f7ff;
-    border: 2px solid #61dafb;
-    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(97, 218, 251, 0.1) 0%, rgba(79, 168, 199, 0.1) 100%);
+    border: 1px solid rgba(97, 218, 251, 0.3);
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(5px);
 }
 
 .camp-registration-form .selected-camp-info h3 {
@@ -88,7 +108,7 @@
     margin-bottom: 1.2rem;
     font-size: 1.4rem;
     font-weight: 600;
-    word-wrap: break-word;
+    text-align: center;
 }
 
 .camp-registration-form .selected-camp-info p {
@@ -96,32 +116,62 @@
     margin-bottom: 0.8rem;
     font-size: 1.1rem;
     line-height: 1.5;
-    word-wrap: break-word;
-    max-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .camp-registration-form .selected-camp-info strong {
     color: #1a365d;
-    margin-right: 0.8rem;
     font-weight: 600;
-    display: inline-block;
+    min-width: 120px;
+}
+
+.camp-registration-form .form-group input.error {
+    border-color: #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.05);
+}
+
+.camp-registration-form .error-message {
+    color: #e53e3e;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    padding: 0.5rem;
+    background-color: rgba(229, 62, 62, 0.1);
+    border-radius: 4px;
+}
+
+.camp-registration-form .submit-button:disabled {
+    background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+.camp-registration-form .submit-button:disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 @media (max-width: 768px) {
+    .signup-section {
+        padding: 1rem;
+    }
+
+    .signup-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
     .camp-registration-form {
         grid-template-columns: 1fr;
         gap: 1.5rem;
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
     .camp-registration-form .form-group {
         margin-bottom: 1.2rem;
-    }
-
-    .camp-registration-form .form-group input,
-    .camp-registration-form .form-group select,
-    .camp-registration-form .form-group textarea {
-        padding: 12px 16px;
     }
 
     .camp-registration-form .selected-camp-info {
@@ -135,27 +185,8 @@
     .camp-registration-form .selected-camp-info p {
         font-size: 1rem;
     }
-}
 
-.camp-registration-form .form-group input.error {
-    border-color: #ff4d4d;
-    background-color: #fff5f5;
-}
-
-.camp-registration-form .error-message {
-    color: #e53e3e;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    font-weight: 500;
-}
-
-.camp-registration-form .submit-button:disabled {
-    background-color: #cbd5e0;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.camp-registration-form .submit-button:disabled:hover {
-    transform: none;
-    background-color: #cbd5e0;
+    .camp-registration-form .selected-camp-info strong {
+        min-width: 100px;
+    }
 }

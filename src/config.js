@@ -24,6 +24,7 @@ export const APP_CONFIG = {
     APP_NAME: "Sailing Camps",
     VERSION: "1.0.0",
     ENVIRONMENT: process.env.NODE_ENV || "development",
+    GOOGLE_MAPS_API_KEY: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 };
 
 // Form Configuration

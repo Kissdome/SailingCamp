@@ -3,6 +3,58 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    background: linear-gradient(180deg, #e0f7ff 0%, #b3e0ff 100%);
+    overflow-x: hidden;
+}
+
+.App::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%),
+        url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.15;
+    z-index: -1;
+}
+
+.wave {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.3" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: 1440px 100px;
+    animation: wave 10s linear infinite;
+    z-index: -1;
+}
+
+.wave:nth-child(2) {
+    bottom: 10px;
+    opacity: 0.5;
+    animation: wave 7s linear infinite reverse;
+}
+
+.wave:nth-child(3) {
+    bottom: 20px;
+    opacity: 0.2;
+    animation: wave 5s linear infinite;
+}
+
+@keyframes wave {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 1440px;
+    }
 }
 
 .App-logo {
@@ -111,10 +163,12 @@
 
 .main-content {
     flex: 1;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 .page-container {
@@ -233,6 +287,15 @@
         margin-top: 0.5rem;
         text-align: center;
         display: block;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .wave {
+        height: 50px;
+        background-size: 720px 50px;
     }
 }
 
@@ -822,5 +885,70 @@
 
     .clear-filters-button {
         width: 100%;
+    }
+}
+
+/* Add a subtle sand texture at the bottom */
+.App::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
+    z-index: -1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+
+    .wave {
+        height: 50px;
+        background-size: 720px 50px;
+    }
+}
+
+/* Add a subtle ripple effect to interactive elements */
+button,
+a,
+input[type="submit"] {
+    position: relative;
+    overflow: hidden;
+}
+
+button::after,
+a::after,
+input[type="submit"]::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+button:focus:not(:active)::after,
+a:focus:not(:active)::after,
+input[type="submit"]:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
     }
 }

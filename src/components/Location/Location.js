@@ -1,4 +1,5 @@
 import React from "react";
+import { APP_CONFIG } from "../../config";
 import "./Location.css";
 
 function Location() {
@@ -64,7 +65,7 @@ function Location() {
                         height="400"
                         frameBorder="0"
                         style={{ border: 0 }}
-                        src={`https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${location.coordinates.lat},${location.coordinates.lng}`}
+                        src={`https://www.google.com/maps/embed/v1/place?key=${APP_CONFIG.GOOGLE_MAPS_API_KEY}&q=${location.coordinates.lat},${location.coordinates.lng}`}
                         allowFullScreen
                     />
                 </div>

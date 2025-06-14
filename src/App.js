@@ -27,6 +27,9 @@ function App() {
         <NotificationProvider>
             <Router>
                 <div className="App">
+                    <div className="wave"></div>
+                    <div className="wave"></div>
+                    <div className="wave"></div>
                     <Navbar />
                     <main className="main-content">
                         <Routes>
